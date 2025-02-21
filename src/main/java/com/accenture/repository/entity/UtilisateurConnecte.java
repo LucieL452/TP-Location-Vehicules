@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Classe qui gère les utilisateurs connectés
+ */
+
 @Data
 @Entity
 @NoArgsConstructor

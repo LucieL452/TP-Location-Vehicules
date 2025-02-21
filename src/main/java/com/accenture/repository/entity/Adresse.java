@@ -8,6 +8,11 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Classe qui concerne l'adresse des clients
+ **/
+
 @Data
 @Entity
 @NoArgsConstructor

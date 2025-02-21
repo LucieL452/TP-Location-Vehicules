@@ -42,7 +42,7 @@ public class ClientController {
      */
     @PostMapping
     ResponseEntity<Void> ajouterClient(@RequestBody @Valid ClientRequestDto clientRequestDto){
-        ClientResponseDto clientEnreg = clientService.ajouter(clientRequestDto);
+        ClientResponseDto clientEnreg = clientService.ajouterClient(clientRequestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

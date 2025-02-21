@@ -9,6 +9,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
+/**
+ * Classe qui gère les clients
+ */
+
+
 @Data
 @Entity
 @NoArgsConstructor

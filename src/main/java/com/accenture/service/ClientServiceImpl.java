@@ -56,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
      */
 
     @Override
-    public ClientResponseDto ajouter(ClientRequestDto clientRequestDto) throws ClientException {
+    public ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException {
 
         verifierClient(clientRequestDto);
 

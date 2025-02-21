@@ -10,5 +10,5 @@ public interface ClientService {
 
     List<ClientResponseDto> trouverTous();
 
-    ClientResponseDto ajouter(ClientRequestDto clientRequestDto) throws ClientException;
+    ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException;
 }
