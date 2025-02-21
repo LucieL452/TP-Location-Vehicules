@@ -14,6 +14,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+
+/**
+ * Cette classe est là pour traiter les clients
+ */
+
+
 @Service
 @AllArgsConstructor
 public class ClientServiceImpl implements ClientService {
