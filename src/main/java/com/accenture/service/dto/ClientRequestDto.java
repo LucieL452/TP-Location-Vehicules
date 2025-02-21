@@ -16,11 +16,10 @@ public record ClientRequestDto(
         message = "Le mot de passe doit faire entre 8 et 16 caractères et contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial ( & # @ - _ §)")
         String password,
 
-        @NotNull(message = "Le nom est obligatoire")
+        @NotBlank(message = "Le nom est obligatoire")
         String nom,
 
-        @NotNull(message = "Le prenom est obligatoire")
-        // TODO changer en blank quand t'auras le temps
+        @NotBlank(message = "Le prenom est obligatoire")
         String prenom,
 
         @NotNull(message = "L'adresse est obligatoire")
