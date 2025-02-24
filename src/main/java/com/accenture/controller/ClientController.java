@@ -67,6 +67,12 @@ public class ClientController {
 
     }
 
+    /**
+     * Méthode qui permet la supression d'un client
+     * @param email
+     * @param password
+     * @return
+     */
     @DeleteMapping("/infos")
     ResponseEntity<ClientResponseDto> suppr(@RequestParam String email, @RequestParam String password){
 
@@ -74,6 +80,19 @@ public class ClientController {
         clientService.supprimerClient(email, password);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
+    }
+
+    /**
+     * Méthode qui permet la modification d'un client
+     * @param email
+     * @param password
+     * @param clientRequestDto
+     * @return
+     */
+    @PatchMapping("/infos")
+    ResponseEntity<ClientResponseDto> modifier(@RequestParam String email, @RequestParam String password, @RequestBody ClientRequestDto clientRequestDto){
+        ClientResponseDto reponse = clientService.modifier(email, password, clientRequestDto);
+        return ResponseEntity.ok(reponse);
     }
 
 

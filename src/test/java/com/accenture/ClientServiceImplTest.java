@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -219,7 +220,7 @@ public class ClientServiceImplTest {
         client.setDateNaissance(LocalDate.of(1996,5,12));
         client.setDateInscription(LocalDate.now());
         client.setAdresse(new Adresse("12 rue vroom vroom","98000","Monaco"));
-        client.setPermis(null);
+        client.setPermis(List.of(Permis.AM));
         return client;
 
     }
@@ -229,7 +230,7 @@ public class ClientServiceImplTest {
     }
 
     private static ClientResponseDto creerSecondClientResponseDto(){
-        return new ClientResponseDto("charles.leclerc@gmail.com","Leclerc","Charles",new AdresseDto("12 rue vroom vroom","98000","Monaco"),LocalDate.of(1996,5,12),null);
+        return new ClientResponseDto("charles.leclerc@gmail.com","Leclerc","Charles",new AdresseDto("12 rue vroom vroom","98000","Monaco"),LocalDate.of(1996,5,12),List.of(Permis.AM));
     }
 
 

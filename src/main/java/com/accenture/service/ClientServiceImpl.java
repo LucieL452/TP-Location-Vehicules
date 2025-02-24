@@ -42,7 +42,6 @@ public class ClientServiceImpl implements ClientService {
      * Méthode qui retourne une liste de tous les clients
      * @return
      */
-
     @Override
     public List<ClientResponseDto> trouverTous() {
         return clientDao.findAll().stream()
@@ -57,7 +56,6 @@ public class ClientServiceImpl implements ClientService {
      * @return
      * @throws ClientException
      */
-
     @Override
     public ClientResponseDto trouver(String email) throws ClientException {
         Optional<Client> optionalClient = clientDao.findById(email);
@@ -74,7 +72,6 @@ public class ClientServiceImpl implements ClientService {
      * @return
      * @throws ClientException
      */
-
     @Override
     public ClientResponseDto recuperer(String email, String password) throws ClientException {
 
@@ -112,6 +109,36 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
+    /**
+     * Méthode qui permet la modification d'un ou de tous les attributs d'un client en base
+     * @param email
+     * @param clientRequestDto
+     * @return
+     * @throws ClientException
+     * @throws EntityNotFoundException
+     */
+    @Override
+    public ClientResponseDto modifier(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
+        verifierClient(clientRequestDto);
+
+        Optional<Client> optionalClient = clientDao.findById(email);
+        if (optionalClient.isEmpty())
+            throw new EntityNotFoundException(ID_NON_PRESENT);
+        Client clientExistant = optionalClient.get();
+        Client clientModif = clientMapper.toClient(clientRequestDto);
+        remplacerExistantParNouveau(clientModif, clientExistant);
+        Client clientEnreg = clientDao.save(clientExistant);
+        return clientMapper.toClientResponseDto(clientEnreg);
+    }
+
+
+    /**
+     * Supprime un client de la base de données
+     * @param email
+     * @param password
+     * @throws ClientException
+     * @throws EntityNotFoundException
+     */
     @Override
     public void supprimerClient(String email, String password) throws ClientException, EntityNotFoundException {
 
@@ -172,6 +199,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private void recuperationClient(String email, String password) {
+
         Optional<Client> optionalClient = clientDao.findById(email);
         if(optionalClient.isEmpty())
             throw new ClientException("Identifiants incorrects");
@@ -179,6 +207,22 @@ public class ClientServiceImpl implements ClientService {
         Client client = optionalClient.get();
         if(!client.getPassword().equals(password))
             throw new ClientException("Identifiants incorrects");
+    }
+
+    private static void remplacerExistantParNouveau(Client client, Client clientExistant) {
+        if (client.getEmail() != null)
+            clientExistant.setEmail(client.getEmail());
+        if (client.getPassword() != null)
+            clientExistant.setPassword(client.getPassword());
+        if (client.getNom() != null)
+            clientExistant.setNom(client.getNom());
+        if (client.getPrenom() != null)
+            clientExistant.setPrenom(client.getPrenom());
+        if (client.getDateNaissance() != null)
+            clientExistant.setDateNaissance(client.getDateNaissance());
+        if (client.getAdresse() != null)
+            clientExistant.setAdresse(client.getAdresse());
+
     }
 
 

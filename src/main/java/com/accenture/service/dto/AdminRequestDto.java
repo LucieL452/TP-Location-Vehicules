@@ -5,6 +5,7 @@ public record AdminRequestDto(
         String password,
         String nom,
         String prenom,
-        String fonction
+        String fonction,
+        Boolean desactive
 ) {
 }
