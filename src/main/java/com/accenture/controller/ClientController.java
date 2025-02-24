@@ -91,7 +91,7 @@ public class ClientController {
      */
     @PatchMapping("/infos")
     ResponseEntity<ClientResponseDto> modifier(@RequestParam String email, @RequestParam String password, @RequestBody ClientRequestDto clientRequestDto){
-        ClientResponseDto reponse = clientService.modifier(email, password, clientRequestDto);
+        ClientResponseDto reponse = clientService.modifierClient(email, password, clientRequestDto);
         return ResponseEntity.ok(reponse);
     }
 

@@ -50,6 +50,12 @@ public class ClientServiceImplTest {
 
     }
 
+
+//    ==================================================================================================================
+//                                            TESTS POUR FIND
+//    ==================================================================================================================
+
+
     @DisplayName("""
             Test de la méthode trouverTous qui doit renvoyer une liste de ClientResponseDto correspondant aux clients existants en base""")
     @Test
@@ -100,6 +106,12 @@ public class ClientServiceImplTest {
         assertSame(dto, service.trouver("max.verstappen@gmail.com"));
 
     }
+
+
+//    ==================================================================================================================
+//                                            TESTS POUR LA METHODE AJOUTER
+//    ==================================================================================================================
+
 
     @DisplayName("""
             Si ajouter(null) exception levée""")
@@ -179,6 +191,55 @@ public class ClientServiceImplTest {
         assertSame(responseDto, service.ajouterClient(requestDto));
         Mockito.verify(daoMock, Mockito.times(1)).save(clientAvantEnreg);
     }
+
+
+//    ==================================================================================================================
+//                                            TESTS POUR LA METHODE MODIFIER
+//    ==================================================================================================================
+
+
+
+    @DisplayName("""
+            Si modifier ClientRequestDto avec un nom null, alors exception levée""")
+    @Test
+    void testModificationNom(){
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+    }
+
+
+    @DisplayName("""
+            Si modifier ClientRequestDto avec un prenom null, alors exception levée""")
+    @Test
+    void testModificationPrenom(){
+        ClientRequestDto dto = new ClientRequestDto("max.verstapper@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+    }
+
+    @DisplayName("""
+            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
+    @Test
+    void testModificationDateNaissance(){
+        ClientRequestDto dto = new ClientRequestDto("max.verstapper@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), null, null);
+        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+    }
+
+    @DisplayName("""
+            Si modifier ClientRequestDto avec un mot de passe null, alors exception levée""")
+    @Test
+    void testModificationMotDePasse(){
+        ClientRequestDto dto = new ClientRequestDto("max.verstapper@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", null, dto));
+    }
+    @DisplayName("""
+            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
+    @Test
+    void testModificationAdresse(){
+        ClientRequestDto dto = new ClientRequestDto("max.verstapper@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1993,5,12), null);
+        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+    }
+
+    //TODO : vérifier si on a tout vérifié justement + corriger "verstapper"
 
 
 

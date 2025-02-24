@@ -118,7 +118,7 @@ public class ClientServiceImpl implements ClientService {
      * @throws EntityNotFoundException
      */
     @Override
-    public ClientResponseDto modifier(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
+    public ClientResponseDto modifierClient(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
         verifierClient(clientRequestDto);
 
         Optional<Client> optionalClient = clientDao.findById(email);
@@ -198,6 +198,11 @@ public class ClientServiceImpl implements ClientService {
             throw new AdresseException("Merci de saisir une ville");
     }
 
+    /**
+     * Méthode qui permet de récupérer les informations d'un client en base avec son adresse-email et son mot de passe (password)
+     * @param email
+     * @param password
+     */
     private void recuperationClient(String email, String password) {
 
         Optional<Client> optionalClient = clientDao.findById(email);
@@ -209,6 +214,12 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientException("Identifiants incorrects");
     }
 
+
+    /**
+     * Méthode qui permet de remplacer des attributs par des nouveaux attributs client
+     * @param client
+     * @param clientExistant
+     */
     private static void remplacerExistantParNouveau(Client client, Client clientExistant) {
         if (client.getEmail() != null)
             clientExistant.setEmail(client.getEmail());
