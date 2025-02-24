@@ -25,4 +25,9 @@ public class Adresse {
     private String codePostal;
     private String ville;
 
+    public Adresse(String nomDeRue, String codePostal, String ville) {
+        this.nomDeRue = nomDeRue;
+        this.codePostal = codePostal;
+        this.ville = ville;
+    }
 }

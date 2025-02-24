@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Classe qui gère les clients
@@ -27,6 +28,5 @@ public class Client extends UtilisateurConnecte{
     @CreationTimestamp
     private LocalDate dateInscription;
 
-    @Enumerated(EnumType.STRING)
-    private Permis permis;
+    private List<Permis> permis;
 }

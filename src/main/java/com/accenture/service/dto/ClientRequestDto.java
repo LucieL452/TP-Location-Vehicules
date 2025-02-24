@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 public record ClientRequestDto(
 
@@ -28,5 +28,6 @@ public record ClientRequestDto(
         @NotNull(message = "La date de naissance est obligatoire")
         @Past(message = "La date de naissance doit être dans le passé")
         LocalDate dateNaissance,
-        Permis permis) {
+
+        List<Permis> permis) {
 }

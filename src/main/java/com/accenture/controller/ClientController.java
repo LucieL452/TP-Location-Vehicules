@@ -7,6 +7,7 @@ import com.accenture.service.ClientService;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,6 @@ public class ClientController {
     }
 
     /**
-     *
      * @return
      */
     @GetMapping
@@ -51,6 +51,33 @@ public class ClientController {
 
         return ResponseEntity.created(location).build();
     }
+
+    /**
+     * Méthode qui permet au client de récupérer les informations d'un compte si l'email et le password sont identiques à ce que nous avons en base
+     * @param email
+     * @param password
+     * @return
+     */
+    @GetMapping("/infos")
+    ResponseEntity<ClientResponseDto> monClient(@RequestParam String email, @RequestParam String password){
+
+        ClientResponseDto trouver = clientService.recuperer(email, password);
+
+        return ResponseEntity.ok(trouver);
+
+    }
+
+    @DeleteMapping("/infos")
+    ResponseEntity<ClientResponseDto> suppr(@RequestParam String email, @RequestParam String password){
+
+
+        clientService.supprimerClient(email, password);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    }
+
+
+
 
 
 

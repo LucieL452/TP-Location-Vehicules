@@ -8,11 +8,13 @@ import com.accenture.service.dto.AdresseDto;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.mapper.ClientMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -25,6 +27,7 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
 
 
+    private static final String ID_NON_PRESENT = "id non présent";
     private final ClientDao clientDao;
     private final ClientMapper clientMapper;
 
@@ -49,12 +52,53 @@ public class ClientServiceImpl implements ClientService {
 
 
     /**
+     * Méthode qui permet de trouver un client à partir de son id(email)
+     * @param email
+     * @return
+     * @throws ClientException
+     */
+
+    @Override
+    public ClientResponseDto trouver(String email) throws ClientException {
+        Optional<Client> optionalClient = clientDao.findById(email);
+        if(optionalClient.isEmpty())
+            throw new EntityNotFoundException(ID_NON_PRESENT);
+        Client client = optionalClient.get();
+        return clientMapper.toClientResponseDto(client);
+    }
+
+    /**
+     * Méthode qui permet de récupérer les informations d'un compte si l'email et le password sont identiques à ce qu'il y a en base
+     * @param email
+     * @param password
+     * @return
+     * @throws ClientException
+     */
+
+    @Override
+    public ClientResponseDto recuperer(String email, String password) throws ClientException {
+
+        Optional<Client> optionalClient = clientDao.findById(email);
+        if(optionalClient.isEmpty())
+            throw new ClientException("Identifiants incorrects");
+
+        Client client = optionalClient.get();
+        if(!client.getPassword().equals(password))
+            throw new ClientException("Identifiants incorrects");
+
+        return clientMapper.toClientResponseDto(client);
+
+        //TODO : voir avec chatGPT pour externalisation
+
+    }
+
+
+    /**
      * Méthode qui permet l'ajout d'un client
      * @param clientRequestDto
      * @return
      * @throws ClientException
      */
-
     @Override
     public ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException {
 
@@ -64,6 +108,15 @@ public class ClientServiceImpl implements ClientService {
         Client clientRetour = clientDao.save(client);
 
         return clientMapper.toClientResponseDto(clientRetour);
+
+    }
+
+
+    @Override
+    public void supprimerClient(String email, String password) throws ClientException, EntityNotFoundException {
+
+        recuperationClient(email, password);
+        clientDao.deleteById(email);
 
     }
 
@@ -117,6 +170,18 @@ public class ClientServiceImpl implements ClientService {
         if(adresseDto.ville() == null || adresseDto.ville().isBlank())
             throw new AdresseException("Merci de saisir une ville");
     }
+
+    private void recuperationClient(String email, String password) {
+        Optional<Client> optionalClient = clientDao.findById(email);
+        if(optionalClient.isEmpty())
+            throw new ClientException("Identifiants incorrects");
+
+        Client client = optionalClient.get();
+        if(!client.getPassword().equals(password))
+            throw new ClientException("Identifiants incorrects");
+    }
+
+
 
 
 
