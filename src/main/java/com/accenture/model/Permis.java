@@ -1,5 +1,10 @@
 package com.accenture.model;
 
+
+/**
+ * Enumeration qui gère les permis
+ */
+
 public enum Permis {
 
     AM,
