@@ -240,27 +240,6 @@ public class ClientServiceImplTest {
     }
 
 
-//    @DisplayName("""
-//            Si la méthode modifier est Ok, alors on appelle un save et c'est un ClientResponseDto qui est renvoyé""")
-//    @Test
-//    void testModifierOk(){
-//        ClientRequestDto requestDto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
-//        Client clientAvantEnreg = creerPremierClient();
-//        clientAvantEnreg.setEmail("max.verstappen@gmail.com ");
-//
-//        Client clientApresEnreg = creerPremierClient();
-//        ClientResponseDto responseDto = creerPremierClientResponseDto();
-//
-//        Mockito.when(mapperMock.toClient(requestDto)).thenReturn(clientAvantEnreg);
-//        Mockito.when(daoMock.save(clientAvantEnreg)).thenReturn(clientApresEnreg);
-//        Mockito.when(mapperMock.toClientResponseDto(clientApresEnreg)).thenReturn(responseDto);
-//
-//        assertSame(responseDto, service.ajouterClient(requestDto));
-//        Mockito.verify(daoMock, Mockito.times(1)).save(clientAvantEnreg);
-//    }
-//
-
-
 
 //    =======================================================================================================
 //

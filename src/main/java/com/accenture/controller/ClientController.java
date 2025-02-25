@@ -27,6 +27,7 @@ public class ClientController {
     }
 
     /**
+     * Méthode qui retourne une liste de tous les clients
      * @return
      */
     @GetMapping

@@ -1,11 +1,8 @@
 package com.accenture.repository.entity;
 
 
-import com.accenture.model.Carburant;
-import com.accenture.model.Permis;
-import com.accenture.model.TypeVoiture;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.accenture.model.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,8 +18,9 @@ public class Voiture extends Vehicule{
     private int nbreDePlaces;
     private Carburant carburant;
     private TypeVoiture typeVoiture;
-    private int nbrePortes;
-    private String autoOuManuelle;
+    private NbrePortes nbrePortes;
+//    @Enumerated(EnumType.STRING)
+    private Transmission transmission;
     private Boolean climatisation;
     private int nbrBagages;
     private List<Permis> permis;
