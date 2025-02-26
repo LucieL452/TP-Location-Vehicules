@@ -60,20 +60,20 @@ public class ClientServiceImplTest {
             Test de la méthode trouverTous qui doit renvoyer une liste de ClientResponseDto correspondant aux clients existants en base""")
     @Test
     void testTrouverTous(){
-        Client Client1 = creerPremierClient();
-        Client Client2 = creerSecondClient();
+        Client client1 = creerPremierClient();
+        Client client2 = creerSecondClient();
 
         ClientResponseDto clientResponseDtoClient1 = creerPremierClientResponseDto();
         ClientResponseDto clientResponseDtoClient2 = creerSecondClientResponseDto();
 
-        List<Client> clients = List.of(Client1, Client2);
+        List<Client> clients = List.of(client1, client2);
 
 
         List<ClientResponseDto> dtos = List.of(clientResponseDtoClient1,clientResponseDtoClient2);
 
         Mockito.when(daoMock.findAll()).thenReturn(clients);
-        Mockito.when(mapperMock.toClientResponseDto(Client1)).thenReturn(clientResponseDtoClient1);
-        Mockito.when(mapperMock.toClientResponseDto(Client2)).thenReturn(clientResponseDtoClient2);
+        Mockito.when(mapperMock.toClientResponseDto(client1)).thenReturn(clientResponseDtoClient1);
+        Mockito.when(mapperMock.toClientResponseDto(client2)).thenReturn(clientResponseDtoClient2);
         assertEquals(dtos, service.trouverTous());
 
     }
@@ -124,7 +124,7 @@ public class ClientServiceImplTest {
             Si ajouter(ClientRequestDto avec email null) exception levée""")
     @Test
     void testAjouterSansEmail(){
-        ClientRequestDto dto = new ClientRequestDto(null, "Cc89&lizdu","Verstappen","Max",new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto(null, "Cc89&lizdu","Verstappen","Max",new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.ajouterClient(dto));
     }
 
@@ -132,7 +132,7 @@ public class ClientServiceImplTest {
             Si ajouter(ClientRequestDto avec nom null) exception levée""")
     @Test
     void testAjouterSansNom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.ajouterClient(dto));
     }
 
@@ -141,7 +141,7 @@ public class ClientServiceImplTest {
             Si ajouter(ClientRequestDto avec prenom null) exception levée""")
     @Test
     void testAjouterSansPrenom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.ajouterClient(dto));
     }
 
@@ -159,7 +159,7 @@ public class ClientServiceImplTest {
             Si ajouter(ClientRequestDto avec nom null) exception levée""")
     @Test
     void testAjouterSansMotDePasse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.ajouterClient(dto));
     }
 
@@ -168,7 +168,7 @@ public class ClientServiceImplTest {
             Si ajouter(ClientRequestDto avec nom null) exception levée""")
     @Test
     void testAjouterSansAdresse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", null, LocalDate.of(1993,5,12),null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", null, LocalDate.of(1997,9,30),null);
         assertThrows(ClientException.class, () -> service.ajouterClient(dto));
     }
 
@@ -177,7 +177,7 @@ public class ClientServiceImplTest {
             Si la méthode Ajouter est Ok, alors on appelle un save et c'est un ClientResponseDto qui est renvoyé""")
     @Test
     void testAjouterOK(){
-        ClientRequestDto requestDto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto requestDto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         Client clientAvantEnreg = creerPremierClient();
         clientAvantEnreg.setEmail("max.verstappen@gmail.com ");
 
@@ -203,7 +203,7 @@ public class ClientServiceImplTest {
             Si modifier ClientRequestDto avec un nom null, alors exception levée""")
     @Test
     void testModificationNom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
     }
 
@@ -212,7 +212,7 @@ public class ClientServiceImplTest {
             Si modifier ClientRequestDto avec un prenom null, alors exception levée""")
     @Test
     void testModificationPrenom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
     }
 
@@ -228,14 +228,14 @@ public class ClientServiceImplTest {
             Si modifier ClientRequestDto avec un mot de passe null, alors exception levée""")
     @Test
     void testModificationMotDePasse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", null, dto));
     }
     @DisplayName("""
             Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
     @Test
     void testModificationAdresse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1993,5,12), null);
+        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1997,9,30), null);
         assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
     }
 
@@ -261,7 +261,7 @@ public class ClientServiceImplTest {
         client.setPrenom("Max");
         client.setPassword("Cc89&lizdu");
         client.setEmail("max.verstappen@gmail.com");
-        client.setDateNaissance(LocalDate.of(1993,5,12));
+        client.setDateNaissance(LocalDate.of(1997,9,30));
         client.setDateInscription(LocalDate.now());
         client.setAdresse(new Adresse("8 rue de la vitesse","1008","Amsterdam"));
         client.setPermis(null);
@@ -276,7 +276,7 @@ public class ClientServiceImplTest {
         client.setPrenom("Charles");
         client.setPassword("Cc89&lizdu");
         client.setEmail("charles.leclerc@gmail.com");
-        client.setDateNaissance(LocalDate.of(1996,5,12));
+        client.setDateNaissance(LocalDate.of(1997,9,16));
         client.setDateInscription(LocalDate.now());
         client.setAdresse(new Adresse("12 rue vroom vroom","98000","Monaco"));
         client.setPermis(List.of(Permis.AM));
@@ -285,11 +285,11 @@ public class ClientServiceImplTest {
     }
 
     private static ClientResponseDto creerPremierClientResponseDto(){
-        return new ClientResponseDto("max.verstappen@gmail.com","Verstappen","Max",new AdresseDto("8 rue de la vitesse","1008","Amsterdam"),LocalDate.of(1993,5,12), null);
+        return new ClientResponseDto("max.verstappen@gmail.com","Verstappen","Max",new AdresseDto("8 rue de la vitesse","1008","Amsterdam"),LocalDate.of(1997,9,30), null);
     }
 
     private static ClientResponseDto creerSecondClientResponseDto(){
-        return new ClientResponseDto("charles.leclerc@gmail.com","Leclerc","Charles",new AdresseDto("12 rue vroom vroom","98000","Monaco"),LocalDate.of(1996,5,12),List.of(Permis.AM));
+        return new ClientResponseDto("charles.leclerc@gmail.com","Leclerc","Charles",new AdresseDto("12 rue vroom vroom","98000","Monaco"),LocalDate.of(1997,9,16),List.of(Permis.AM));
     }
 
 

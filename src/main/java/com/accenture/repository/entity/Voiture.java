@@ -15,15 +15,15 @@ import java.util.List;
 @Table(name = "VOITURES")
 public class Voiture extends Vehicule{
 
-    private int nbreDePlaces;
+    private Integer nbreDePlaces;
     private Carburant carburant;
     private TypeVoiture typeVoiture;
     private NbrePortes nbrePortes;
 //    @Enumerated(EnumType.STRING)
     private Transmission transmission;
     private Boolean climatisation;
-    private int nbrBagages;
-    private List<Permis> permis;
+    private Integer nbrBagages;
+    private Permis permis;
 
 
 

@@ -103,7 +103,9 @@ public class VoitureServiceImpl implements VoitureService {
             throw new VoitureException("La marque est obligatoire");
         if (voitureRequestDto.modele() == null)
             throw new VoitureException("Le modele est obligatoire");
-        if (voitureRequestDto.nbreDePlaces() < 1 || voitureRequestDto.nbreDePlaces() > 16)
+        if (voitureRequestDto.couleur() == null)
+            throw new VoitureException("La couleur est obligatoire");
+        if (voitureRequestDto.nbreDePlaces() == null || voitureRequestDto.nbreDePlaces() < 1 || voitureRequestDto.nbreDePlaces() > 16)
             throw new VoitureException("Merci d'entrer un nombre de place entre 1 et 16.");
         if (voitureRequestDto.carburant() == null)
             throw new VoitureException("Merci de saisir un carburant");
@@ -115,17 +117,16 @@ public class VoitureServiceImpl implements VoitureService {
             throw new VoitureException("Merci de saisir si la voiture est manuelle ou automatique");
         if(voitureRequestDto.climatisation() == null)
             throw new VoitureException("Merci de saisir si la climatisation est active ou non");
-        if(voitureRequestDto.nbrBagages() < 0 || voitureRequestDto.nbrBagages() >5 )
+        if(voitureRequestDto.nbrBagages() == null || voitureRequestDto.nbrBagages() < 0 || voitureRequestDto.nbrBagages() >10 )
             throw new VoitureException("Merci de saisir un nombre de bagages compris entre 1 et 5");
     }
 
     private void attributionPermis(Voiture voiture){
 
         if (voiture.getNbreDePlaces() >= 10 )
-            voiture.setPermis(List.of(Permis.D1));
-        else voiture.setPermis(List.of(Permis.B));
+            voiture.setPermis(Permis.D1);
+        else voiture.setPermis(Permis.B);
 
-        //TODO Finir cette méthode et repartir sur les tests modifs de voiture
     }
 
 

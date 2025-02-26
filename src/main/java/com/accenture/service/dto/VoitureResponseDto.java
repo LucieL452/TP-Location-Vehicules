@@ -9,13 +9,13 @@ public record VoitureResponseDto(
         String marque,
         String modele,
         String couleur,
-        int nbreDePlaces,
+        Integer nbreDePlaces,
         Carburant carburant,
         TypeVoiture typeVoiture,
         Transmission transmission,
         NbrePortes nbrePortes,
         Boolean climatisation,
-        int nbrBagages,
-        List<Permis> permis
+        Integer nbrBagages,
+        Permis permis
 ) {
 }

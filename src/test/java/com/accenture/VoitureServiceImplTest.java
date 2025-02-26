@@ -1,33 +1,20 @@
 package com.accenture;
 
-
-import com.accenture.exception.VoitureException;
 import com.accenture.exception.VoitureException;
 import com.accenture.model.*;
-import com.accenture.repository.ClientDao;
 import com.accenture.repository.VoitureDao;
-import com.accenture.repository.entity.Adresse;
-import com.accenture.repository.entity.Client;
 import com.accenture.repository.entity.Voiture;
-import com.accenture.service.ClientServiceImpl;
 import com.accenture.service.VoitureServiceImpl;
-import com.accenture.service.dto.AdresseDto;
 import com.accenture.service.dto.VoitureRequestDto;
-import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.dto.VoitureResponseDto;
-import com.accenture.service.mapper.ClientMapper;
 import com.accenture.service.mapper.VoitureMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +34,9 @@ public class VoitureServiceImplTest {
     @InjectMocks
     VoitureServiceImpl service;
 
+    @Captor
+    ArgumentCaptor <Voiture> captor;
+
     @BeforeEach()
     void init(){
         daoMock = Mockito.mock(VoitureDao.class);
@@ -65,20 +55,20 @@ public class VoitureServiceImplTest {
             Test de la méthode trouverToutes qui doit renvoyer une liste de VoitureResponseDto correspondant aux voitures en base""")
     @Test
     void testTrouverToutes(){
-        Client Client1 = creerPremierClient();
-        Client Client2 = creerSecondClient();
+        Voiture voiture1 = creerPremiereVoiture();
+        Voiture voiture2 = creerSecondeVoiture();
 
-        ClientResponseDto clientResponseDtoClient1 = creerPremierClientResponseDto();
-        ClientResponseDto clientResponseDtoClient2 = creerSecondClientResponseDto();
+        VoitureResponseDto voiture1ResponseDto = creerPremiereVoitureResponseDto();
+        VoitureResponseDto voiture2ResponseDto = creerSecondeVoitureResponseDto();
 
-        List<Client> clients = List.of(Client1, Client2);
+        List<Voiture> voitures = List.of(voiture1, voiture2);
 
 
-        List<ClientResponseDto> dtos = List.of(clientResponseDtoClient1,clientResponseDtoClient2);
+        List<VoitureResponseDto> dtos = List.of(voiture1ResponseDto,voiture2ResponseDto);
 
-        Mockito.when(daoMock.findAll()).thenReturn(clients);
-        Mockito.when(mapperMock.toVoitureResponseDto(Client1)).thenReturn(clientResponseDtoClient1);
-        Mockito.when(mapperMock.toVoitureResponseDto((Client2)).thenReturn(clientResponseDtoClient2);
+        Mockito.when(daoMock.findAll()).thenReturn(voitures);
+        Mockito.when(mapperMock.toVoitureResponseDto(voiture1)).thenReturn(voiture1ResponseDto);
+        Mockito.when(mapperMock.toVoitureResponseDto(voiture2)).thenReturn(voiture2ResponseDto);
         assertEquals(dtos, service.trouverToutes());
 
     }
@@ -101,10 +91,10 @@ public class VoitureServiceImplTest {
     @Test
     void testTrouverExiste(){
         //simulation qu'une voiture existe en base
-        Client client =  creerPremierClient();
-        Optional<Client> optionalClient = Optional.of(client);
-        Mockito.when(daoMock.findById(1)).thenReturn(optionalClient);
-        ClientResponseDto dto = creerPremierClientResponseDto();
+        Voiture voiture =  creerPremiereVoiture();
+        Optional<Voiture> optionalVoiture = Optional.of(voiture);
+        Mockito.when(daoMock.findById(1)).thenReturn(optionalVoiture);
+        VoitureResponseDto dto = creerPremiereVoitureResponseDto();
         Mockito.when(mapperMock.toVoitureResponseDto(voiture)).thenReturn(dto);
 
 
@@ -116,6 +106,37 @@ public class VoitureServiceImplTest {
 //    ==================================================================================================================
 //                                            TESTS POUR LA METHODE AJOUTER
 //    ==================================================================================================================
+
+
+    @DisplayName("""
+            Test de la méthode d'attribution permis B""")
+    @Test
+    void testAttributionPermisB(){
+
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,5);
+        Voiture v =  creerPremiereVoiture();
+
+        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
+        service.ajouterVoiture(requestDto);
+        Mockito.verify(daoMock).save(captor.capture());
+        assertEquals(Permis.B, captor.getValue().getPermis());
+
+    }
+
+    @DisplayName("""
+            Test de la méthode d'attribution permis D1""")
+    @Test
+    void testAttributionPermisD1(){
+
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,5);
+        Voiture v =  creerSecondeVoiture();
+
+        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
+        service.ajouterVoiture(requestDto);
+        Mockito.verify(daoMock).save(captor.capture());
+        assertEquals(Permis.D1, captor.getValue().getPermis());
+
+    }
 
 
     @DisplayName("""
@@ -137,10 +158,9 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec modele null) exception levée""")
     @Test
     void testAjouterSansModele(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);;
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
     }
-
 
     @DisplayName("""
             Si ajouter(VoitureRequestDto avec couleur null) exception levée""")
@@ -155,7 +175,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto nbreDePlaces est different) exception levée""")
     @Test
     void testAjouterSansNbrePlaces(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",3, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
     }
 
@@ -173,7 +193,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec typeVoiture null) exception levée""")
     @Test
     void testAjouterSansTypeVoiture(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);;
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
     }
 
@@ -181,7 +201,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto nbreDePlaces est different) exception levée""")
     @Test
     void testAjouterSansNbrePortes(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",3, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
     }
 
@@ -208,7 +228,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec NbreBagages null) exception levée""")
     @Test
     void testAjouterSansNbrBagages(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,8);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
         assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
     }
 
@@ -217,18 +237,18 @@ public class VoitureServiceImplTest {
             Si la méthode Ajouter est Ok, alors on appelle un save et c'est un VoitureResponseDto qui est renvoyé""")
     @Test
     void testAjouterOK(){
-        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,8);
-        Voiture voitureAvantEnreg = creerPremierClient();
-        voitureAvantEnreg.setId(0);
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        Voiture voitureAvantEnreg = creerPremiereVoiture();
 
-        Voiture voitureApresEnreg = creerPremierClient();
-        VoitureResponseDto responseDto = creerPremierClientResponseDto();
+        Voiture voitureApresEnreg = creerPremiereVoiture();
+        VoitureResponseDto responseDto = creerPremiereVoitureResponseDto();
 
-        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(voitureApresEnreg);
+        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(voitureAvantEnreg);
         Mockito.when(daoMock.save(voitureAvantEnreg)).thenReturn(voitureApresEnreg);
         Mockito.when(mapperMock.toVoitureResponseDto(voitureApresEnreg)).thenReturn(responseDto);
 
         assertSame(responseDto, service.ajouterVoiture(requestDto));
+        voitureAvantEnreg.setPermis(Permis.B);
         Mockito.verify(daoMock, Mockito.times(1)).save(voitureAvantEnreg);
     }
 
@@ -250,43 +270,49 @@ public class VoitureServiceImplTest {
 
 
 
-    private static Client creerPremiereVoiture(){
+    private static Voiture creerPremiereVoiture(){
 
         Voiture voiture = new Voiture();
-        voiture.setNom("Verstappen");
-        voiture.setPrenom("Max");
-        voiture.setPassword("Cc89&lizdu");
-        voiture.setEmail("max.verstappen@gmail.com");
-        voiture.setDateNaissance(LocalDate.of(1993,5,12));
-        voiture.setDateInscription(LocalDate.now());
-        voiture.setAdresse(new Adresse("8 rue de la vitesse","1008","Amsterdam"));
-        voiture.setPermis(null);
+        voiture.setMarque("Maserati");
+        voiture.setModele("Grecale");
+        voiture.setCouleur("rose");
+        voiture.setNbreDePlaces(5);
+        voiture.setCarburant(Carburant.Hybride);
+        voiture.setTypeVoiture(TypeVoiture.Berline);
+        voiture.setNbrePortes(NbrePortes.Cinq);
+        voiture.setTransmission(Transmission.AUTOMATIQUE);
+        voiture.setClimatisation(true);
+        voiture.setNbrBagages(3);
         return voiture;
 
     }
 
-    private static Client creerSecondeVoiture(){
+        private static Voiture creerSecondeVoiture(){
 
         Voiture voiture = new Voiture();
-        voiture.setModele();
-        voiture.setPrenom("Charles");
-        voiture.setPassword("Cc89&lizdu");
-        voiture.setEmail("charles.leclerc@gmail.com");
-        voiture.setDateNaissance(LocalDate.of(1996,5,12));
-        voiture.setDateInscription(LocalDate.now());
-        voiture.setAdresse(new Adresse("12 rue vroom vroom","98000","Monaco"));
-        voiture.setPermis(List.of(Permis.AM));
+        voiture.setMarque("Mercedes");
+        voiture.setModele("Sprinter XXL");
+        voiture.setCouleur("rose");
+        voiture.setNbreDePlaces(15);
+        voiture.setCarburant(Carburant.Essence);
+        voiture.setTypeVoiture(TypeVoiture.Luxe);
+        voiture.setNbrePortes(NbrePortes.Cinq);
+        voiture.setTransmission(Transmission.AUTOMATIQUE);
+        voiture.setClimatisation(true);
+        voiture.setNbrBagages(10);
         return voiture;
 
     }
 
     private static VoitureResponseDto creerPremiereVoitureResponseDto(){
-        return new VoitureResponseDto(1, "Maserati","Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline,Transmission.AUTOMATIQUE,NbrePortes.Cinq,true,3,List.of(Permis.B));
+        return new VoitureResponseDto(1, "Maserati","Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline,Transmission.AUTOMATIQUE,NbrePortes.Cinq,true,3,Permis.B);
     }
 
-    private static ClientResponseDto creerSecondClientResponseDto(){
-        return new ClientResponseDto("charles.leclerc@gmail.com","Leclerc","Charles",new AdresseDto("12 rue vroom vroom","98000","Monaco"),LocalDate.of(1996,5,12),List.of(Permis.AM));
+    private static VoitureResponseDto creerSecondeVoitureResponseDto() {
+        return new VoitureResponseDto(2, "Mercedes", "Sprinter XXL", "rose", 15, Carburant.Essence, TypeVoiture.Luxe, Transmission.AUTOMATIQUE, NbrePortes.Cinq, true, 10, Permis.D1);
     }
+
+
 
 
 
