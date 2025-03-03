@@ -70,6 +70,12 @@ public class VoitureServiceImpl implements VoitureService {
                 .toList();
     }
 
+    /**
+     * Méthode qui retourne un objet VoitureResponseDto via id
+     * @param id
+     * @return
+     * @throws VoitureException
+     */
     @Override
     public VoitureResponseDto trouver(int id) throws VoitureException {
         Optional<Voiture> optionalVoiture = voitureDao.findById(id);
@@ -78,6 +84,47 @@ public class VoitureServiceImpl implements VoitureService {
         Voiture voiture = optionalVoiture.get();
         return voitureMapper.toVoitureResponseDto(voiture);
     }
+
+    /**
+     * Méthode qui supprime un objet voitureDao via id
+     * @param id
+     * @throws VoitureException
+     * @throws EntityNotFoundException
+     */
+    @Override
+    public void supprimer(int id) throws VoitureException, EntityNotFoundException {
+
+
+        if(voitureDao.existsById(id))
+            voitureDao.deleteById(id);
+        else
+            throw new EntityNotFoundException(ID_NON_PRESENT);
+
+    }
+
+    /**
+     * Méthode qui permet la modification d'un ou de tous les attributs d'un véhicule en base
+     * @param id
+     * @param voitureRequestDto
+     * @return
+     * @throws VoitureException
+     * @throws EntityNotFoundException
+     */
+    @Override
+    public VoitureResponseDto modifierVoiture(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException {
+        verifierVoiture(voitureRequestDto);
+
+        Optional<Voiture> optionalVoiture = voitureDao.findById(id);
+        if (optionalVoiture.isEmpty())
+            throw new EntityNotFoundException(ID_NON_PRESENT);
+
+        Voiture voitureExistante = optionalVoiture.get();
+        Voiture voitureModif = voitureMapper.toVoiture(voitureRequestDto);
+        remplacerExistantParNouveau(voitureModif, voitureExistante);
+        Voiture voitureEnreg = voitureDao.save(voitureExistante);
+        return voitureMapper.toVoitureResponseDto(voitureEnreg);
+    }
+
 
 
 
@@ -121,11 +168,62 @@ public class VoitureServiceImpl implements VoitureService {
             throw new VoitureException("Merci de saisir un nombre de bagages compris entre 1 et 5");
     }
 
+
+    /**
+     *
+     * Méthode qui attribue automatiquement un permis en fonction du nombre de place d'un véhicule
+     * @param voiture
+     */
     private void attributionPermis(Voiture voiture){
 
         if (voiture.getNbreDePlaces() >= 10 )
             voiture.setPermis(Permis.D1);
         else voiture.setPermis(Permis.B);
+
+    }
+
+
+    private static void remplacerExistantParNouveau(Voiture voiture, Voiture voitureExistante) {
+        if (voiture.getMarque() != null)
+            voitureExistante.setMarque(voiture.getMarque());
+        if (voiture.getModele() != null)
+            voitureExistante.setModele(voiture.getModele());
+        if (voiture.getCouleur() != null)
+            voitureExistante.setCouleur(voiture.getCouleur());
+        if (voiture.getNbrePortes() != null)
+            voitureExistante.setNbrePortes(voiture.getNbrePortes());
+        if (voiture.getNbreDePlaces() != null)
+            voitureExistante.setNbreDePlaces(voiture.getNbreDePlaces());
+        if (voiture.getCarburant() != null)
+            voitureExistante.setCarburant(voiture.getCarburant());
+        if (voiture.getTypeVoiture() != null)
+            voitureExistante.setTypeVoiture(voiture.getTypeVoiture());
+        if (voiture.getTransmission() != null)
+            voitureExistante.setTransmission(voiture.getTransmission());
+        if (voiture.getClimatisation() != null)
+            voitureExistante.setClimatisation(voiture.getClimatisation());
+        if (voiture.getNbrBagages() != null)
+            voitureExistante.setNbrBagages(voiture.getNbrBagages());
+        if (voiture.getPermis() != null)
+            voitureExistante.setPermis(voiture.getPermis());
+        if (voiture.getTarifBase() != null)
+            voitureExistante.setTarifBase(voiture.getTarifBase());
+        if (voiture.getKilometrage() != null)
+            voitureExistante.setKilometrage(voiture.getKilometrage());
+        if (voiture.getHorsParc() != null)
+            voitureExistante.setHorsParc(voiture.getHorsParc());
+        if (voiture.getActif() != null)
+            voitureExistante.setActif(voiture.getActif());
+
+    }
+
+
+
+    private void horsParc(Voiture voiture) throws VoitureException{
+
+        if (!voiture.getActif()){
+            supprimer(voiture.getId());
+        } else throw new VoitureException("La voiture est en location");
 
     }
 

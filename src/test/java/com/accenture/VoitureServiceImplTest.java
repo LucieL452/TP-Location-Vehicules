@@ -1,20 +1,25 @@
 package com.accenture;
 
+import com.accenture.exception.ClientException;
 import com.accenture.exception.VoitureException;
 import com.accenture.model.*;
 import com.accenture.repository.VoitureDao;
+import com.accenture.repository.entity.Client;
 import com.accenture.repository.entity.Voiture;
+import com.accenture.service.VoitureService;
 import com.accenture.service.VoitureServiceImpl;
-import com.accenture.service.dto.VoitureRequestDto;
-import com.accenture.service.dto.VoitureResponseDto;
+import com.accenture.service.dto.*;
 import com.accenture.service.mapper.VoitureMapper;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -237,22 +242,193 @@ public class VoitureServiceImplTest {
             Si la méthode Ajouter est Ok, alors on appelle un save et c'est un VoitureResponseDto qui est renvoyé""")
     @Test
     void testAjouterOK(){
+
+        //Creation d'une voiture requestDto (attribut dans la méthode "ajouter voiture")
         VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+
+        //Creation d'un objet voiture, avec les mêmes attributs, utile dans la méthode 'toVoiture'
         Voiture voitureAvantEnreg = creerPremiereVoiture();
 
+        //Idem, utile pour la méthode 'toVoitureResponseDto'
         Voiture voitureApresEnreg = creerPremiereVoiture();
+
+        //Creation d'une voiture response dto, en sortie de la méthode 'toVoitureResponseDto'
         VoitureResponseDto responseDto = creerPremiereVoitureResponseDto();
 
+        //Depuis le mapper, > toVoiture(requestDto) on retourne voitureAvantEnreg
         Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(voitureAvantEnreg);
+
+        //Enregistrement de voitureAvantEnreg dans le dao, retourne voitureApresEnreg
         Mockito.when(daoMock.save(voitureAvantEnreg)).thenReturn(voitureApresEnreg);
+
+        //Depuis le mapper > toVoitureResponseDto (dans l'autre sens, voitureApresEnreg), on retourne responseDto
         Mockito.when(mapperMock.toVoitureResponseDto(voitureApresEnreg)).thenReturn(responseDto);
 
+
+        //méthode qui affirme si deux objets renvoient au même objet
         assertSame(responseDto, service.ajouterVoiture(requestDto));
+        //on set le permis
         voitureAvantEnreg.setPermis(Permis.B);
+
+        //vérifie que la méthode save a été appelée une fois sur l'objet voitureAvantEnreg
         Mockito.verify(daoMock, Mockito.times(1)).save(voitureAvantEnreg);
     }
 
 
+//    ==================================================================================================================
+//                                            TESTS POUR LA METHODE SUPPRIMER
+//    ==================================================================================================================
+
+
+    @DisplayName("""
+            Test de la méthode supprimer""")
+    @Test
+    void testSupprimerOK(){
+
+        Voiture requestDto = creerPremiereVoiture();
+        requestDto.setId(1);
+
+    //    VoitureResponseDto responseDto = creerPremiereVoitureResponseDto();
+
+        //existsById retourne un booléen
+        Mockito.when(daoMock.existsById(1)).thenReturn(true);
+
+        service.supprimer(1);
+
+        Mockito.verify(daoMock, Mockito.times(1)).deleteById(1);
+
+
+    }
+
+
+
+//    ==================================================================================================================
+//                                            TESTS POUR LA METHODE MODIFIER
+//    ==================================================================================================================
+
+
+    @DisplayName("""
+            Si la méthode modif est OK, on save les changements et un voitureResponseDto est renvoyé""")
+    @Test
+    void TestModificationOK(){
+
+        VoitureRequestDto requestDto  = new VoitureRequestDto("Maserati", null,null,null, null, null, null,null, null, null);
+        Voiture nouvelleVoiture = new Voiture();
+        Voiture vraieVoiture = creerPremiereVoiture();
+
+        Voiture voitureRemplace = creerPremiereVoiture();
+        voitureRemplace.setMarque("Peugeot");
+
+        VoitureResponseDto responseDto = new VoitureResponseDto(1, "Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, Transmission.AUTOMATIQUE, NbrePortes.Cinq,true,3, Permis.B);
+
+
+        Mockito.when(daoMock.findById(1)).thenReturn(Optional.of(vraieVoiture));
+        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(nouvelleVoiture);
+        Mockito.when(daoMock.save(vraieVoiture)).thenReturn(voitureRemplace);
+        Mockito.when(mapperMock.toVoitureResponseDto(voitureRemplace)).thenReturn(responseDto);
+
+        assertEquals(responseDto, service.modifierVoiture(1, requestDto));
+
+        Mockito.verify(daoMock, Mockito.times(1)).save(vraieVoiture);
+
+    }
+
+    //TODO : voir les deux méthodes vérifier avec Emmanuel
+
+
+
+//    ==================================================================================================================
+//                                            TESTS POUR LA METHODE MODIFIER
+//    ==================================================================================================================
+
+
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec une marque null, alors exception levée""")
+    @Test
+    void testModificationMarque(){
+        VoitureRequestDto dto = new VoitureRequestDto(null, "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un modele null, alors exception levée""")
+    @Test
+    void testModificationModele(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec une couleur null, alors exception levée""")
+    @Test
+    void testModificationCouleur(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale",null,5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un nbre de places null, alors exception levée""")
+    @Test
+    void testModificationNbrePlaces(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un carburant null, alors exception levée""")
+    @Test
+    void testModificationCarburant(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5,null, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un type de voiture null, alors exception levée""")
+    @Test
+    void testModificationTypeVoiture(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un nbre de portes null, alors exception levée""")
+    @Test
+    void testModificationNbrePortes(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec une transmission null, alors exception levée""")
+    @Test
+    void testModificationTransmission(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, null,true,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec une climatisation null, alors exception levée""")
+    @Test
+    void testModificationClimatisation(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,null,3);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+    @DisplayName("""
+            Si modifier VoitureRequestDto avec un nbre de bagages null, alors exception levée""")
+    @Test
+    void testModificationNbreBagages(){
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
+        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+    }
+
+
+
+
+
+//TODO tester les méthodes modifs
+    //TODO Add les logs + swagger
 
 
 

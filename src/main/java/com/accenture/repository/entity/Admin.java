@@ -17,5 +17,6 @@ import lombok.NoArgsConstructor;
 public class Admin extends UtilisateurConnecte{
 
     private String fonction;
+    private Boolean desactive;
 
 }

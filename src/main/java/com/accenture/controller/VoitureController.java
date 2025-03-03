@@ -8,6 +8,7 @@ import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.dto.VoitureRequestDto;
 import com.accenture.service.dto.VoitureResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -53,12 +54,28 @@ public class VoitureController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/infos")
     ResponseEntity<VoitureResponseDto> voiture(@PathVariable("id") int id){
 
         VoitureResponseDto trouve = voitureService.trouver(id);
         return ResponseEntity.ok(trouve);
 
+    }
+
+
+    @DeleteMapping("/infos")
+    ResponseEntity<VoitureResponseDto> suppr(@PathVariable("id") int id){
+
+        voitureService.supprimer(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    }
+
+
+    @PatchMapping("/infos")
+    ResponseEntity<VoitureResponseDto> modifier(@RequestParam int id, @RequestBody VoitureRequestDto voitureRequestDto){
+        VoitureResponseDto reponse = voitureService.modifierVoiture(id, voitureRequestDto);
+        return ResponseEntity.ok(reponse);
     }
 
 

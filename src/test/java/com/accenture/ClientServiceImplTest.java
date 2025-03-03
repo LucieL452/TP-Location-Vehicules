@@ -6,6 +6,7 @@ import com.accenture.model.Permis;
 import com.accenture.repository.ClientDao;
 import com.accenture.repository.entity.Adresse;
 import com.accenture.repository.entity.Client;
+import com.accenture.repository.entity.UtilisateurConnecte;
 import com.accenture.service.ClientServiceImpl;
 import com.accenture.service.dto.AdresseDto;
 import com.accenture.service.dto.ClientRequestDto;
@@ -23,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -165,7 +167,7 @@ public class ClientServiceImplTest {
 
 
     @DisplayName("""
-            Si ajouter(ClientRequestDto avec nom null) exception levée""")
+            Si ajouter(ClientRequestDto avec adresse null) exception levée""")
     @Test
     void testAjouterSansAdresse(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", null, LocalDate.of(1997,9,30),null);
@@ -200,44 +202,75 @@ public class ClientServiceImplTest {
 
 
     @DisplayName("""
-            Si modifier ClientRequestDto avec un nom null, alors exception levée""")
+            Si la méthode modif est OK, on save les changements et un clientResponseDto est renvoyé""")
     @Test
-    void testModificationNom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
-    }
+    void TestModificationOK(){
+
+        ClientRequestDto requestDto  = new ClientRequestDto(null, null,null,"Olivier", null, null, null);
+        Client clientNouveau = new Client(null, null, null, "Olivier", null, null, null, null);
+        Client clientVrai = creerPremierClient();
+
+        Client clientRemplace = creerPremierClient();
+        clientRemplace.setPrenom("Olivier");
+
+        ClientResponseDto responseDto = new ClientResponseDto("max.verstappen@gmail.com", "Cc89&lizdu","Olivier", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
 
 
-    @DisplayName("""
-            Si modifier ClientRequestDto avec un prenom null, alors exception levée""")
-    @Test
-    void testModificationPrenom(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(clientVrai));
+        Mockito.when(mapperMock.toClient(requestDto)).thenReturn(clientNouveau);
+        Mockito.when(daoMock.save(clientVrai)).thenReturn(clientRemplace);
+        Mockito.when(mapperMock.toClientResponseDto(clientRemplace)).thenReturn(responseDto);
+
+        assertEquals(responseDto, service.modifierClient("max.verstappen@gmail.com","Cc89&lizdu", requestDto));
+
+        Mockito.verify(daoMock, Mockito.times(1)).save(clientVrai);
+
     }
 
-    @DisplayName("""
-            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
-    @Test
-    void testModificationDateNaissance(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), null, null);
-        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
-    }
+//    @DisplayName("""
+//            Si modifier ClientRequestDto avec un nom null, alors exception levée""")
+//    @Test
+//    void testModificationNom(){
+//        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
+//        Client client = creerPremierClient();
+//        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(client));
+//        Mockito.when(mapperMock.toClient(dto)).thenReturn();
+//
+//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//    }
+//
+//
+//    @DisplayName("""
+//            Si modifier ClientRequestDto avec un prenom null, alors exception levée""")
+//    @Test
+//    void testModificationPrenom(){
+//        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
+//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//    }
+//
+//    @DisplayName("""
+//            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
+//    @Test
+//    void testModificationDateNaissance(){
+//        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), null, null);
+//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//    }
+//
+//    @DisplayName("""
+//            Si modifier ClientRequestDto avec un mot de passe null, alors exception levée""")
+//    @Test
+//    void testModificationMotDePasse(){
+//        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
+//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", null, dto));
+//    }
+//    @DisplayName("""
+//            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
+//    @Test
+//    void testModificationAdresse(){
+//        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1997,9,30), null);
+//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//    }
 
-    @DisplayName("""
-            Si modifier ClientRequestDto avec un mot de passe null, alors exception levée""")
-    @Test
-    void testModificationMotDePasse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", null, dto));
-    }
-    @DisplayName("""
-            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
-    @Test
-    void testModificationAdresse(){
-        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
-    }
 
 
 

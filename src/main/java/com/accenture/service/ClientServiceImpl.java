@@ -119,7 +119,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public ClientResponseDto modifierClient(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
-        verifierClient(clientRequestDto);
+//        verifierClient(clientRequestDto);
 
         Optional<Client> optionalClient = clientDao.findById(email);
         if (optionalClient.isEmpty())
@@ -212,6 +212,8 @@ public class ClientServiceImpl implements ClientService {
         Client client = optionalClient.get();
         if(!client.getPassword().equals(password))
             throw new ClientException("Identifiants incorrects");
+
+        //faire un return de l'objet
     }
 
 

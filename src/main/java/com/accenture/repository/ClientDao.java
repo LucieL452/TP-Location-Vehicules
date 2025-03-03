@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface ClientDao extends JpaRepository<Client, String> {
 
 
-
 }
