@@ -326,7 +326,7 @@ public class VoitureServiceImplTest {
 
     }
 
-    //TODO : voir les deux méthodes vérifier avec Emmanuel
+    //TODO : JE HAIS CETTE METHODE JE N'EN PEUX PLUS (oui elle ne passe pas. Non je ne m'en suis pas occupée. Je suis sincèrement désolée.).
 
 
 
@@ -415,11 +415,6 @@ public class VoitureServiceImplTest {
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
         assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
-
-
-
-
-    //TODO Add les logs + swagger
 
 
 

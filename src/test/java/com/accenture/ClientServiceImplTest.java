@@ -373,15 +373,6 @@ public class ClientServiceImplTest {
         assertEquals("Identifiants incorrects", ex.getMessage());
     }
 
-//    @DisplayName("""
-//            Test qui vérifie que le mot de passe entré est identique à celui en base. """)
-//    @Test
-//    void testRecupererEmailsIdentiques() {
-//        Client client = new Client();
-//        client.setEmail("max.verstappen@gmail.com");
-//        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(client));
-//        assertDoesNotThrow(() -> service.recuperer("max.verstappen@gmail.com", "Cc89&lizdu"));
-//    }
 
     @DisplayName("""
             Test qui vérifie que la méthode lève bien une exception lorsque le login fournis n'existe pas dans la basse de donnée        """)
@@ -393,17 +384,6 @@ public class ClientServiceImplTest {
         Mockito.verify(daoMock).findById("max.verstappen@gmail.com");
     }
 
-//
-//    @DisplayName("""
-//            Test qui lève une exception si l'email rentré et celui en base ne concordent pas """)
-//    @Test
-//    void testRecupererEmailDiff() {
-//        Client client = new Client();
-//        client.setEmail("Whatever@gmail.com");
-//        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(client));
-//        ClientException ex = assertThrows(ClientException.class, () -> service.recuperer("max.verstappen@gmail.com", "Cc89&lizdu"));
-//        assertEquals("Identifiants incorrects", ex.getMessage());
-//    }
 
 
 //    =======================================================================================================
