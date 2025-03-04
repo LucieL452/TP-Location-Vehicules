@@ -112,7 +112,6 @@ public class VoitureServiceImpl implements VoitureService {
      */
     @Override
     public VoitureResponseDto modifier(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException {
-        verifier(voitureRequestDto);
 
         Optional<Voiture> optionalVoiture = voitureDao.findById(id);
         if (optionalVoiture.isEmpty())

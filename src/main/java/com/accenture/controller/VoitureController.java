@@ -50,7 +50,11 @@ public class VoitureController {
         return voitureService.trouverToutes();
     }
 
-
+    /**
+     * Méthode qui retourne une voiture en utilisant son id
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     ResponseEntity<VoitureResponseDto> voiture(@PathVariable("id") int id){
 
@@ -59,7 +63,11 @@ public class VoitureController {
 
     }
 
-
+    /**
+     * Méthode qui supprime une voiture
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     ResponseEntity<VoitureResponseDto> suppr(@PathVariable("id") int id){
 
@@ -69,6 +77,12 @@ public class VoitureController {
     }
 
 
+    /**
+     * Méthode qui permet la modification partielle d'une voiture
+     * @param id
+     * @param voitureRequestDto
+     * @return
+     */
     @PatchMapping("/{id}")
     ResponseEntity<VoitureResponseDto> modifier(@RequestParam int id, @RequestBody VoitureRequestDto voitureRequestDto){
         VoitureResponseDto reponse = voitureService.modifier(id, voitureRequestDto);
