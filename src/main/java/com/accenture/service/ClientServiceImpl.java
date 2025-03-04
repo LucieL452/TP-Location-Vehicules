@@ -133,17 +133,20 @@ public class ClientServiceImpl implements ClientService {
 
     /**
      * Supprime un client de la base de données
+     *
      * @param email
      * @param password
+     * @return
      * @throws ClientException
      * @throws EntityNotFoundException
      */
     @Override
-    public void supprimer(String email, String password) throws ClientException, EntityNotFoundException {
+    public ClientResponseDto supprimer(String email, String password) throws ClientException, EntityNotFoundException {
 
-        recuperationClient(email, password);
+        Client client = recuperationClient(email, password);
         clientDao.deleteById(email);
 
+        return clientMapper.toClientResponseDto(client);
     }
 
 
@@ -201,6 +204,7 @@ public class ClientServiceImpl implements ClientService {
      * Méthode qui permet de récupérer les informations d'un client en base avec son adresse-email et son mot de passe (password)
      * @param email
      * @param password
+     * @return client
      */
     private Client recuperationClient(String email, String password) {
 

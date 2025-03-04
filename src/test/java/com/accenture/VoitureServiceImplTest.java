@@ -283,8 +283,6 @@ public class VoitureServiceImplTest {
         Voiture requestDto = creerPremiereVoiture();
         requestDto.setId(1);
 
-    //    VoitureResponseDto responseDto = creerPremiereVoitureResponseDto();
-
         //existsById retourne un booléen
         Mockito.when(daoMock.existsById(1)).thenReturn(true);
 
@@ -421,8 +419,6 @@ public class VoitureServiceImplTest {
 
 
 
-
-//TODO tester les méthodes modifs
     //TODO Add les logs + swagger
 
 
