@@ -1,6 +1,5 @@
 package com.accenture.service;
 
-import com.accenture.exception.AdresseException;
 import com.accenture.exception.ClientException;
 import com.accenture.repository.ClientDao;
 import com.accenture.repository.entity.Client;
@@ -97,7 +96,7 @@ public class ClientServiceImpl implements ClientService {
      * @throws ClientException
      */
     @Override
-    public ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException {
+    public ClientResponseDto ajouter(ClientRequestDto clientRequestDto) throws ClientException {
 
         verifierClient(clientRequestDto);
 
@@ -118,7 +117,7 @@ public class ClientServiceImpl implements ClientService {
      * @throws EntityNotFoundException
      */
     @Override
-    public ClientResponseDto modifierClient(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
+    public ClientResponseDto modifier(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException {
 //        verifierClient(clientRequestDto);
 
         Optional<Client> optionalClient = clientDao.findById(email);
@@ -140,7 +139,7 @@ public class ClientServiceImpl implements ClientService {
      * @throws EntityNotFoundException
      */
     @Override
-    public void supprimerClient(String email, String password) throws ClientException, EntityNotFoundException {
+    public void supprimer(String email, String password) throws ClientException, EntityNotFoundException {
 
         recuperationClient(email, password);
         clientDao.deleteById(email);
@@ -186,16 +185,16 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Méthode qui vérifie les attributs de la classe Adresse
      * @param adresseDto
-     * @throws AdresseException
+     * @throws ClientException
      */
 
-    private void verifierAdresse(AdresseDto adresseDto) throws AdresseException {
+    private void verifierAdresse(AdresseDto adresseDto) throws ClientException{
         if(adresseDto.nomDeRue() == null || adresseDto.nomDeRue().isBlank())
-            throw new AdresseException("Merci de saisir un nom de rue");
+            throw new ClientException("Merci de saisir un nom de rue");
         if(adresseDto.codePostal() == null || adresseDto.codePostal().isBlank())
-            throw new AdresseException("Merci de saisir un code postal");
+            throw new ClientException("Merci de saisir un code postal");
         if(adresseDto.ville() == null || adresseDto.ville().isBlank())
-            throw new AdresseException("Merci de saisir une ville");
+            throw new ClientException("Merci de saisir une ville");
     }
 
     /**
@@ -203,7 +202,7 @@ public class ClientServiceImpl implements ClientService {
      * @param email
      * @param password
      */
-    private void recuperationClient(String email, String password) {
+    private Client recuperationClient(String email, String password) {
 
         Optional<Client> optionalClient = clientDao.findById(email);
         if(optionalClient.isEmpty())
@@ -213,7 +212,7 @@ public class ClientServiceImpl implements ClientService {
         if(!client.getPassword().equals(password))
             throw new ClientException("Identifiants incorrects");
 
-        //faire un return de l'objet
+        return client;
     }
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 public interface VoitureService {
 
 
-    VoitureResponseDto ajouterVoiture(VoitureRequestDto voitureRequestDto) throws VoitureException;
+    VoitureResponseDto ajouter(VoitureRequestDto voitureRequestDto) throws VoitureException;
 
     List<VoitureResponseDto> trouverToutes();
 
@@ -18,5 +18,5 @@ public interface VoitureService {
 
     void supprimer(int id) throws VoitureException, EntityNotFoundException;
 
-    VoitureResponseDto modifierVoiture(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException;
+    VoitureResponseDto modifier(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException;
 }

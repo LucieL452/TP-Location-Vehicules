@@ -46,9 +46,9 @@ public class VoitureServiceImpl implements VoitureService {
      * @throws VoitureException
      */
     @Override
-    public VoitureResponseDto ajouterVoiture(VoitureRequestDto voitureRequestDto) throws VoitureException {
+    public VoitureResponseDto ajouter(VoitureRequestDto voitureRequestDto) throws VoitureException {
 
-       verifierVoiture(voitureRequestDto);
+       verifier(voitureRequestDto);
 
         Voiture voiture = voitureMapper.toVoiture(voitureRequestDto);
         attributionPermis(voiture);
@@ -111,8 +111,8 @@ public class VoitureServiceImpl implements VoitureService {
      * @throws EntityNotFoundException
      */
     @Override
-    public VoitureResponseDto modifierVoiture(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException {
-        verifierVoiture(voitureRequestDto);
+    public VoitureResponseDto modifier(int id, VoitureRequestDto voitureRequestDto) throws VoitureException, EntityNotFoundException {
+        verifier(voitureRequestDto);
 
         Optional<Voiture> optionalVoiture = voitureDao.findById(id);
         if (optionalVoiture.isEmpty())
@@ -143,7 +143,7 @@ public class VoitureServiceImpl implements VoitureService {
      * @throws VoitureException
      */
 
-    private void verifierVoiture(VoitureRequestDto voitureRequestDto) throws VoitureException {
+    private void verifier(VoitureRequestDto voitureRequestDto) throws VoitureException {
         if(voitureRequestDto == null)
             throw new VoitureException("Merci de remplir le formulaire");
         if (voitureRequestDto.marque() == null)

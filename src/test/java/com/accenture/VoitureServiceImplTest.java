@@ -1,17 +1,13 @@
 package com.accenture;
 
-import com.accenture.exception.ClientException;
 import com.accenture.exception.VoitureException;
 import com.accenture.model.*;
 import com.accenture.repository.VoitureDao;
-import com.accenture.repository.entity.Client;
 import com.accenture.repository.entity.Voiture;
-import com.accenture.service.VoitureService;
 import com.accenture.service.VoitureServiceImpl;
 import com.accenture.service.dto.*;
 import com.accenture.service.mapper.VoitureMapper;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.Id;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,7 +117,7 @@ public class VoitureServiceImplTest {
         Voiture v =  creerPremiereVoiture();
 
         Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
-        service.ajouterVoiture(requestDto);
+        service.ajouter(requestDto);
         Mockito.verify(daoMock).save(captor.capture());
         assertEquals(Permis.B, captor.getValue().getPermis());
 
@@ -137,7 +132,7 @@ public class VoitureServiceImplTest {
         Voiture v =  creerSecondeVoiture();
 
         Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
-        service.ajouterVoiture(requestDto);
+        service.ajouter(requestDto);
         Mockito.verify(daoMock).save(captor.capture());
         assertEquals(Permis.D1, captor.getValue().getPermis());
 
@@ -148,7 +143,7 @@ public class VoitureServiceImplTest {
             Si ajouter(null) exception levée""")
     @Test
     void testAjouter(){
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(null));
+        assertThrows(VoitureException.class, () -> service.ajouter(null));
     }
 
     @DisplayName("""
@@ -156,7 +151,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterMarque(){
         VoitureRequestDto dto = new VoitureRequestDto(null, "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
     @DisplayName("""
@@ -164,7 +159,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansModele(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
     @DisplayName("""
@@ -172,7 +167,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansCouleur(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale",null,5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -181,7 +176,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansNbrePlaces(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -190,7 +185,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansCarburant(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, null, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -199,7 +194,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansTypeVoiture(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
     @DisplayName("""
@@ -207,7 +202,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansNbrePortes(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -216,7 +211,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansTransmission(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, null,true,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -225,7 +220,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansClim(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,null,3);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -234,7 +229,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAjouterSansNbrBagages(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
-        assertThrows(VoitureException.class, () -> service.ajouterVoiture(dto));
+        assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
 
@@ -266,7 +261,7 @@ public class VoitureServiceImplTest {
 
 
         //méthode qui affirme si deux objets renvoient au même objet
-        assertSame(responseDto, service.ajouterVoiture(requestDto));
+        assertSame(responseDto, service.ajouter(requestDto));
         //on set le permis
         voitureAvantEnreg.setPermis(Permis.B);
 
@@ -327,7 +322,7 @@ public class VoitureServiceImplTest {
         Mockito.when(daoMock.save(vraieVoiture)).thenReturn(voitureRemplace);
         Mockito.when(mapperMock.toVoitureResponseDto(voitureRemplace)).thenReturn(responseDto);
 
-        assertEquals(responseDto, service.modifierVoiture(1, requestDto));
+        assertEquals(responseDto, service.modifier(1, requestDto));
 
         Mockito.verify(daoMock, Mockito.times(1)).save(vraieVoiture);
 
@@ -348,7 +343,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationMarque(){
         VoitureRequestDto dto = new VoitureRequestDto(null, "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
 
@@ -357,7 +352,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationModele(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -365,7 +360,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationCouleur(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale",null,5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -373,14 +368,14 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationNbrePlaces(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
     @DisplayName("""
             Si modifier VoitureRequestDto avec un carburant null, alors exception levée""")
     @Test
     void testModificationCarburant(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5,null, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -388,7 +383,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationTypeVoiture(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -396,7 +391,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationNbrePortes(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -404,7 +399,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationTransmission(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, null,true,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -412,7 +407,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationClimatisation(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,null,3);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
     @DisplayName("""
@@ -420,7 +415,7 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationNbreBagages(){
         VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
-        assertThrows(VoitureException.class, () -> service.modifierVoiture(1, dto));
+        assertThrows(VoitureException.class, () -> service.modifier(1, dto));
     }
 
 

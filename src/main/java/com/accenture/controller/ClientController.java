@@ -1,15 +1,11 @@
 package com.accenture.controller;
 
-import com.accenture.exception.ClientException;
-import com.accenture.repository.entity.Client;
-import com.accenture.repository.entity.UtilisateurConnecte;
 import com.accenture.service.ClientService;
 import com.accenture.service.dto.ClientRequestDto;
 import com.accenture.service.dto.ClientResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,7 +39,7 @@ public class ClientController {
      */
     @PostMapping
     ResponseEntity<Void> ajouterClient(@RequestBody @Valid ClientRequestDto clientRequestDto){
-        ClientResponseDto clientEnreg = clientService.ajouterClient(clientRequestDto);
+        ClientResponseDto clientEnreg = clientService.ajouter(clientRequestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -78,7 +74,7 @@ public class ClientController {
     ResponseEntity<ClientResponseDto> suppr(@RequestParam String email, @RequestParam String password){
 
 
-        clientService.supprimerClient(email, password);
+        clientService.supprimer(email, password);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
@@ -92,7 +88,7 @@ public class ClientController {
      */
     @PatchMapping("/infos")
     ResponseEntity<ClientResponseDto> modifier(@RequestParam String email, @RequestParam String password, @RequestBody ClientRequestDto clientRequestDto){
-        ClientResponseDto reponse = clientService.modifierClient(email, password, clientRequestDto);
+        ClientResponseDto reponse = clientService.modifier(email, password, clientRequestDto);
         return ResponseEntity.ok(reponse);
     }
 

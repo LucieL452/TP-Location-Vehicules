@@ -15,9 +15,9 @@ public interface ClientService {
 
     ClientResponseDto recuperer(String email, String password) throws ClientException;
 
-    ClientResponseDto ajouterClient(ClientRequestDto clientRequestDto) throws ClientException;
+    ClientResponseDto ajouter(ClientRequestDto clientRequestDto) throws ClientException;
 
-    ClientResponseDto modifierClient(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException;
+    ClientResponseDto modifier(String email, String password, ClientRequestDto clientRequestDto) throws ClientException, EntityNotFoundException;
 
-    void supprimerClient(String email, String password) throws ClientException, EntityNotFoundException;
+    void supprimer(String email, String password) throws ClientException, EntityNotFoundException;
 }

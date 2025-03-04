@@ -1,10 +1,7 @@
 package com.accenture.controller;
 
 
-import com.accenture.service.ClientService;
 import com.accenture.service.VoitureService;
-import com.accenture.service.dto.ClientRequestDto;
-import com.accenture.service.dto.ClientResponseDto;
 import com.accenture.service.dto.VoitureRequestDto;
 import com.accenture.service.dto.VoitureResponseDto;
 import jakarta.validation.Valid;
@@ -32,8 +29,8 @@ public class VoitureController {
      * @return
      */
     @PostMapping
-    ResponseEntity<Void> ajouterVoiture(@RequestBody @Valid VoitureRequestDto voitureRequestDto){
-        VoitureResponseDto voitureEnreg = voitureService.ajouterVoiture(voitureRequestDto);
+    ResponseEntity<Void> ajouter(@RequestBody @Valid VoitureRequestDto voitureRequestDto){
+        VoitureResponseDto voitureEnreg = voitureService.ajouter(voitureRequestDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -54,7 +51,7 @@ public class VoitureController {
     }
 
 
-    @GetMapping("/infos")
+    @GetMapping("/{id}")
     ResponseEntity<VoitureResponseDto> voiture(@PathVariable("id") int id){
 
         VoitureResponseDto trouve = voitureService.trouver(id);
@@ -63,7 +60,7 @@ public class VoitureController {
     }
 
 
-    @DeleteMapping("/infos")
+    @DeleteMapping("/{id}")
     ResponseEntity<VoitureResponseDto> suppr(@PathVariable("id") int id){
 
         voitureService.supprimer(id);
@@ -72,9 +69,9 @@ public class VoitureController {
     }
 
 
-    @PatchMapping("/infos")
+    @PatchMapping("/{id}")
     ResponseEntity<VoitureResponseDto> modifier(@RequestParam int id, @RequestBody VoitureRequestDto voitureRequestDto){
-        VoitureResponseDto reponse = voitureService.modifierVoiture(id, voitureRequestDto);
+        VoitureResponseDto reponse = voitureService.modifier(id, voitureRequestDto);
         return ResponseEntity.ok(reponse);
     }
 

@@ -6,7 +6,6 @@ import com.accenture.model.Permis;
 import com.accenture.repository.ClientDao;
 import com.accenture.repository.entity.Adresse;
 import com.accenture.repository.entity.Client;
-import com.accenture.repository.entity.UtilisateurConnecte;
 import com.accenture.service.ClientServiceImpl;
 import com.accenture.service.dto.AdresseDto;
 import com.accenture.service.dto.ClientRequestDto;
@@ -21,11 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
-import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,7 +115,7 @@ public class ClientServiceImplTest {
             Si ajouter(null) exception levée""")
     @Test
     void testAjouter(){
-        assertThrows(ClientException.class, () -> service.ajouterClient(null));
+        assertThrows(ClientException.class, () -> service.ajouter(null));
     }
 
     @DisplayName("""
@@ -127,7 +123,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterSansEmail(){
         ClientRequestDto dto = new ClientRequestDto(null, "Cc89&lizdu","Verstappen","Max",new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
     @DisplayName("""
@@ -135,7 +131,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterSansNom(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu",null,"Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
 
@@ -144,7 +140,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterSansPrenom(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
 
@@ -153,7 +149,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterDateNaissance(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), null, null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
 
@@ -162,7 +158,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterSansMotDePasse(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
 
@@ -171,7 +167,7 @@ public class ClientServiceImplTest {
     @Test
     void testAjouterSansAdresse(){
         ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", null, LocalDate.of(1997,9,30),null);
-        assertThrows(ClientException.class, () -> service.ajouterClient(dto));
+        assertThrows(ClientException.class, () -> service.ajouter(dto));
     }
 
 
@@ -190,7 +186,7 @@ public class ClientServiceImplTest {
         Mockito.when(daoMock.save(clientAvantEnreg)).thenReturn(clientApresEnreg);
         Mockito.when(mapperMock.toClientResponseDto(clientApresEnreg)).thenReturn(responseDto);
 
-        assertSame(responseDto, service.ajouterClient(requestDto));
+        assertSame(responseDto, service.ajouter(requestDto));
         Mockito.verify(daoMock, Mockito.times(1)).save(clientAvantEnreg);
     }
 
@@ -221,7 +217,7 @@ public class ClientServiceImplTest {
         Mockito.when(daoMock.save(clientVrai)).thenReturn(clientRemplace);
         Mockito.when(mapperMock.toClientResponseDto(clientRemplace)).thenReturn(responseDto);
 
-        assertEquals(responseDto, service.modifierClient("max.verstappen@gmail.com","Cc89&lizdu", requestDto));
+        assertEquals(responseDto, service.modifier("max.verstappen@gmail.com","Cc89&lizdu", requestDto));
 
         Mockito.verify(daoMock, Mockito.times(1)).save(clientVrai);
 
@@ -236,7 +232,7 @@ public class ClientServiceImplTest {
 //        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(client));
 //        Mockito.when(mapperMock.toClient(dto)).thenReturn();
 //
-//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//        assertThrows(ClientException.class, () -> service.modifier("max.verstappen@gmail.com", "Cc89&lizdu", dto));
 //    }
 //
 //
@@ -245,7 +241,7 @@ public class ClientServiceImplTest {
 //    @Test
 //    void testModificationPrenom(){
 //        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen",null, new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//        assertThrows(ClientException.class, () -> service.modifier("max.verstappen@gmail.com", "Cc89&lizdu", dto));
 //    }
 //
 //    @DisplayName("""
@@ -253,7 +249,7 @@ public class ClientServiceImplTest {
 //    @Test
 //    void testModificationDateNaissance(){
 //        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), null, null);
-//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//        assertThrows(ClientException.class, () -> service.modifier("max.verstappen@gmail.com", "Cc89&lizdu", dto));
 //    }
 //
 //    @DisplayName("""
@@ -261,14 +257,14 @@ public class ClientServiceImplTest {
 //    @Test
 //    void testModificationMotDePasse(){
 //        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", null,"Verstappen","Max", new AdresseDto("8 rue de la vitesse","1008","Amsterdam"), LocalDate.of(1997,9,30), null);
-//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", null, dto));
+//        assertThrows(ClientException.class, () -> service.modifier("max.verstappen@gmail.com", null, dto));
 //    }
 //    @DisplayName("""
 //            Si modifier ClientRequestDto avec une date de naissance null, alors exception levée""")
 //    @Test
 //    void testModificationAdresse(){
 //        ClientRequestDto dto = new ClientRequestDto("max.verstappen@gmail.com", "Cc89&lizdu","Verstappen","Max",null, LocalDate.of(1997,9,30), null);
-//        assertThrows(ClientException.class, () -> service.modifierClient("max.verstappen@gmail.com", "Cc89&lizdu", dto));
+//        assertThrows(ClientException.class, () -> service.modifier("max.verstappen@gmail.com", "Cc89&lizdu", dto));
 //    }
 
 
