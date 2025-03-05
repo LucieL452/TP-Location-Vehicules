@@ -301,18 +301,90 @@ public class VoitureServiceImplTest {
 
 
     @DisplayName("""
-            Si la méthode modif est OK, on save les changements et un voitureResponseDto est renvoyé""")
+            On modifie la marque de la voiture, on save les changements et un voitureResponseDto avec la marque modifiée est renvoyé""")
     @Test
-    void TestModificationOK(){
+    void TestModificationMarque(){
 
-        VoitureRequestDto requestDto  = new VoitureRequestDto("Maserati", null,null,null, null, null, null,null, null, null);
+        // On crée une nouvelle voitureRequestDto où on initialise tout à nul sauf la marque (ce qu'on souhaite changer)
+        VoitureRequestDto requestDto  = new VoitureRequestDto("Peugeot", null,null,null, null, null, null,null, null, null);
+
+        // On crée une nouvelle voiture (nécessaire de créer un objet voiture pour > responsedto) où on set la marque
         Voiture nouvelleVoiture = new Voiture();
+        nouvelleVoiture.setMarque("Peugeot");
+
+        // On crée l'objet vraieVoiture qui est la voiture avant modif
         Voiture vraieVoiture = creerPremiereVoiture();
 
+        // On crée voitureRemplace avec le changement de marque
         Voiture voitureRemplace = creerPremiereVoiture();
         voitureRemplace.setMarque("Peugeot");
 
-        VoitureResponseDto responseDto = new VoitureResponseDto(1, "Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, Transmission.AUTOMATIQUE, NbrePortes.Cinq,true,3, Permis.B);
+        //On crée le voiture response dto avec tout, et la marque changée
+        VoitureResponseDto responseDto = new VoitureResponseDto(1, "Peugeot", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, Transmission.AUTOMATIQUE, NbrePortes.Cinq,true,3, Permis.B);
+
+        // STUBBING
+        //FindById qui retourne un optional de vraieVoiture
+        Mockito.when(daoMock.findById(1)).thenReturn(Optional.of(vraieVoiture));
+        //Depuis requestdto, on renvoie la nouvelleVoiture (vide avec juste la marque de changée)
+        Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(nouvelleVoiture);
+        //On test
+        Mockito.when(daoMock.save(vraieVoiture)).thenReturn(voitureRemplace);
+
+        Mockito.when(mapperMock.toVoitureResponseDto(voitureRemplace)).thenReturn(responseDto);
+        //On vérifie si vraieVoiture a toujours la marque maserati, avant changement
+        assertEquals("Maserati", vraieVoiture.getMarque());
+
+        // Appel d'assertEquals qui compare si responseDto & requestDto sont identiques. Appel de la méthode modifier
+        assertEquals(responseDto, service.modifier(1, requestDto));
+
+        // On vérifie si la méthode save fonctionne et passe bien vraieVoiture en base
+        Mockito.verify(daoMock, Mockito.times(1)).save(vraieVoiture);
+
+        // On vérifie si vraieVoiture possède désormais la marque Peugeot
+        assertEquals("Peugeot", vraieVoiture.getMarque());
+    }
+
+    @DisplayName("""
+            On modifie tous les attributs de voiture, sauf la marque. Et on renvoie une voitureResponseDto avec toutes les modifications""")
+    @Test
+    void testModificationToutSaufMarque(){
+
+        VoitureRequestDto requestDto  = new VoitureRequestDto(null, "Twingo","rose",5, Carburant.Essence, TypeVoiture.Citadine, NbrePortes.Trois,Transmission.AUTOMATIQUE, true, 1);
+        Voiture nouvelleVoiture = new Voiture();
+        nouvelleVoiture.setModele("Twingo");
+        nouvelleVoiture.setCouleur("rose");
+        nouvelleVoiture.setNbrePortes(NbrePortes.Trois);
+        nouvelleVoiture.setNbreDePlaces(5);
+        nouvelleVoiture.setCarburant(Carburant.Essence);
+        nouvelleVoiture.setTypeVoiture(TypeVoiture.Citadine);
+        nouvelleVoiture.setTransmission(Transmission.AUTOMATIQUE);
+        nouvelleVoiture.setClimatisation(true);
+        nouvelleVoiture.setNbrBagages(1);
+        nouvelleVoiture.setPermis(Permis.B);
+        nouvelleVoiture.setTarifBase(100);
+        nouvelleVoiture.setKilometrage(40000);
+        nouvelleVoiture.setHorsParc(false);
+        nouvelleVoiture.setActif(true);
+
+        Voiture vraieVoiture = creerPremiereVoiture();
+
+        Voiture voitureRemplace = creerPremiereVoiture();
+
+        voitureRemplace.setModele("Twingo");
+        voitureRemplace.setCouleur("rose");
+        voitureRemplace.setNbrePortes(NbrePortes.Trois);
+        voitureRemplace.setNbreDePlaces(5);
+        voitureRemplace.setCarburant(Carburant.Essence);
+        voitureRemplace.setTypeVoiture(TypeVoiture.Citadine);
+        voitureRemplace.setTransmission(Transmission.AUTOMATIQUE);
+        voitureRemplace.setClimatisation(true);
+        voitureRemplace.setNbrBagages(1);
+        voitureRemplace.setPermis(Permis.B);
+//        voitureRemplace.setTarifBase(100);
+//        voitureRemplace.setKilometrage(40000);
+//        voitureRemplace.setHorsParc(false);
+//        voitureRemplace.setActif(true);
+        VoitureResponseDto responseDto = new VoitureResponseDto(1, null, "Twingo","rose",5, Carburant.Essence, TypeVoiture.Citadine, Transmission.AUTOMATIQUE, NbrePortes.Trois, true, 1, Permis.B);
 
 
         Mockito.when(daoMock.findById(1)).thenReturn(Optional.of(vraieVoiture));
@@ -320,13 +392,26 @@ public class VoitureServiceImplTest {
         Mockito.when(daoMock.save(vraieVoiture)).thenReturn(voitureRemplace);
         Mockito.when(mapperMock.toVoitureResponseDto(voitureRemplace)).thenReturn(responseDto);
 
+
+
         assertEquals(responseDto, service.modifier(1, requestDto));
 
         Mockito.verify(daoMock, Mockito.times(1)).save(vraieVoiture);
+        assertEquals("Maserati", vraieVoiture.getMarque());
+        assertEquals("Twingo", vraieVoiture.getModele());
+        assertEquals("rose", vraieVoiture.getCouleur());
+        assertEquals(NbrePortes.Trois, vraieVoiture.getNbrePortes());
+        assertEquals(5, vraieVoiture.getNbreDePlaces());
+        assertEquals(Carburant.Essence, vraieVoiture.getCarburant());
+        assertEquals(TypeVoiture.Citadine, vraieVoiture.getTypeVoiture());
+        assertEquals(Transmission.AUTOMATIQUE, vraieVoiture.getTransmission());
+        assertEquals(true, vraieVoiture.getClimatisation());
+        assertEquals(1, vraieVoiture.getNbrBagages());
+        assertEquals(Permis.B, vraieVoiture.getPermis());
 
     }
 
-    //TODO : JE HAIS CETTE METHODE JE N'EN PEUX PLUS (oui elle ne passe pas. Non je ne m'en suis pas occupée. Je suis sincèrement désolée.).
+
 
 
 
