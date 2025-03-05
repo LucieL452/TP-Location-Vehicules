@@ -6,11 +6,11 @@ package com.accenture.model;
 
 public enum TypeVoiture {
 
-    Citadine,
-    Berline,
+    CITADINE,
+    BERLINE,
     SUV,
-    Familiale,
-    Electrique,
-    Luxe
+    FAMILIALE,
+    ELECTRIQUE,
+    LUXE
 
 }

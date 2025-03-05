@@ -5,8 +5,8 @@ package com.accenture.model;
  */
 
 public enum Carburant {
-    Diesel,
-    Essence,
-    Electrique,
-    Hybride
+    DIESEL,
+    ESSENCE,
+    ELECTRIQUE,
+    HYBRIDE
 }

@@ -2,12 +2,14 @@ package com.accenture.repository.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Vehicule {
 
@@ -17,6 +19,11 @@ public class Vehicule {
     private String marque;
     private String modele;
     private String couleur;
+
+    private Integer kilometrage;
+    private Integer tarifBase;
+    private Boolean horsParc;
+    private Boolean actif;
 
 
 

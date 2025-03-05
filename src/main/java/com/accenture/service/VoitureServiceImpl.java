@@ -93,12 +93,16 @@ public class VoitureServiceImpl implements VoitureService {
      */
     @Override
     public void supprimer(int id) throws VoitureException, EntityNotFoundException {
-
-
-        if(voitureDao.existsById(id))
-            voitureDao.deleteById(id);
-        else
+        if(!voitureDao.existsById(id))
             throw new EntityNotFoundException(ID_NON_PRESENT);
+
+        voitureDao.deleteById(id);
+
+
+//        if(voitureDao.existsById(id))
+//            voitureDao.deleteById(id);
+//        else
+//            throw new EntityNotFoundException(ID_NON_PRESENT);
 
     }
 
@@ -225,6 +229,6 @@ public class VoitureServiceImpl implements VoitureService {
         } else throw new VoitureException("La voiture est en location");
 
     }
-
+//TODO
 
 }

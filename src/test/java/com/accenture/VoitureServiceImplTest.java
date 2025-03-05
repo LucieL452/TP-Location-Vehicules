@@ -113,7 +113,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAttributionPermisB(){
 
-        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,5);
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,5);
         Voiture v =  creerPremiereVoiture();
 
         Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
@@ -128,7 +128,7 @@ public class VoitureServiceImplTest {
     @Test
     void testAttributionPermisD1(){
 
-        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,5);
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,5);
         Voiture v =  creerSecondeVoiture();
 
         Mockito.when(mapperMock.toVoiture(requestDto)).thenReturn(v);
@@ -150,7 +150,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec marque null) exception levée""")
     @Test
     void testAjouterMarque(){
-        VoitureRequestDto dto = new VoitureRequestDto(null, "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto(null, "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -158,7 +158,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec modele null) exception levée""")
     @Test
     void testAjouterSansModele(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", null,"rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -166,7 +166,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec couleur null) exception levée""")
     @Test
     void testAjouterSansCouleur(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale",null,5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale",null,5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -175,7 +175,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto nbreDePlaces est different) exception levée""")
     @Test
     void testAjouterSansNbrePlaces(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",null, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -184,7 +184,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec carburant null) exception levée""")
     @Test
     void testAjouterSansCarburant(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, null, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, null, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -193,7 +193,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec typeVoiture null) exception levée""")
     @Test
     void testAjouterSansTypeVoiture(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, null, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, null, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -201,7 +201,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto nbreDePlaces est different) exception levée""")
     @Test
     void testAjouterSansNbrePortes(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, null, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, null, Transmission.AUTOMATIQUE,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -210,7 +210,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec carburant null) exception levée""")
     @Test
     void testAjouterSansTransmission(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, null,true,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, null,true,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -219,7 +219,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec nom null) exception levée""")
     @Test
     void testAjouterSansClim(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,null,3);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,null,3);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -228,7 +228,7 @@ public class VoitureServiceImplTest {
             Si ajouter(VoitureRequestDto avec NbreBagages null) exception levée""")
     @Test
     void testAjouterSansNbrBagages(){
-        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,null);
+        VoitureRequestDto dto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,null);
         assertThrows(VoitureException.class, () -> service.ajouter(dto));
     }
 
@@ -239,7 +239,7 @@ public class VoitureServiceImplTest {
     void testAjouterOK(){
 
         //Creation d'une voiture requestDto (attribut dans la méthode "ajouter voiture")
-        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline, NbrePortes.Cinq, Transmission.AUTOMATIQUE,true,3);
+        VoitureRequestDto requestDto = new VoitureRequestDto("Maserati", "Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE, NbrePortes.CINQ, Transmission.AUTOMATIQUE,true,3);
 
         //Creation d'un objet voiture, avec les mêmes attributs, utile dans la méthode 'toVoiture'
         Voiture voitureAvantEnreg = creerPremiereVoiture();
@@ -320,7 +320,7 @@ public class VoitureServiceImplTest {
         voitureRemplace.setMarque("Peugeot");
 
         //On crée le voiture response dto avec tout, et la marque changée
-        VoitureResponseDto responseDto = new VoitureResponseDto(1, "Peugeot", "Grecale","rose",null, Carburant.Hybride, TypeVoiture.Berline, Transmission.AUTOMATIQUE, NbrePortes.Cinq,true,3, Permis.B);
+        VoitureResponseDto responseDto = new VoitureResponseDto(1, "Peugeot", "Grecale","rose",null, Carburant.HYBRIDE, TypeVoiture.BERLINE, Transmission.AUTOMATIQUE, NbrePortes.CINQ,true,3, Permis.B);
 
         // STUBBING
         //FindById qui retourne un optional de vraieVoiture
@@ -349,14 +349,14 @@ public class VoitureServiceImplTest {
     @Test
     void testModificationToutSaufMarque(){
 
-        VoitureRequestDto requestDto  = new VoitureRequestDto(null, "Twingo","rose",5, Carburant.Essence, TypeVoiture.Citadine, NbrePortes.Trois,Transmission.AUTOMATIQUE, true, 1);
+        VoitureRequestDto requestDto  = new VoitureRequestDto(null, "Twingo","rose",5, Carburant.ESSENCE, TypeVoiture.CITADINE, NbrePortes.TROIS,Transmission.AUTOMATIQUE, true, 1);
         Voiture nouvelleVoiture = new Voiture();
         nouvelleVoiture.setModele("Twingo");
         nouvelleVoiture.setCouleur("rose");
-        nouvelleVoiture.setNbrePortes(NbrePortes.Trois);
+        nouvelleVoiture.setNbrePortes(NbrePortes.TROIS);
         nouvelleVoiture.setNbreDePlaces(5);
-        nouvelleVoiture.setCarburant(Carburant.Essence);
-        nouvelleVoiture.setTypeVoiture(TypeVoiture.Citadine);
+        nouvelleVoiture.setCarburant(Carburant.ESSENCE);
+        nouvelleVoiture.setTypeVoiture(TypeVoiture.CITADINE);
         nouvelleVoiture.setTransmission(Transmission.AUTOMATIQUE);
         nouvelleVoiture.setClimatisation(true);
         nouvelleVoiture.setNbrBagages(1);
@@ -372,10 +372,10 @@ public class VoitureServiceImplTest {
 
         voitureRemplace.setModele("Twingo");
         voitureRemplace.setCouleur("rose");
-        voitureRemplace.setNbrePortes(NbrePortes.Trois);
+        voitureRemplace.setNbrePortes(NbrePortes.TROIS);
         voitureRemplace.setNbreDePlaces(5);
-        voitureRemplace.setCarburant(Carburant.Essence);
-        voitureRemplace.setTypeVoiture(TypeVoiture.Citadine);
+        voitureRemplace.setCarburant(Carburant.ESSENCE);
+        voitureRemplace.setTypeVoiture(TypeVoiture.CITADINE);
         voitureRemplace.setTransmission(Transmission.AUTOMATIQUE);
         voitureRemplace.setClimatisation(true);
         voitureRemplace.setNbrBagages(1);
@@ -384,7 +384,7 @@ public class VoitureServiceImplTest {
 //        voitureRemplace.setKilometrage(40000);
 //        voitureRemplace.setHorsParc(false);
 //        voitureRemplace.setActif(true);
-        VoitureResponseDto responseDto = new VoitureResponseDto(1, null, "Twingo","rose",5, Carburant.Essence, TypeVoiture.Citadine, Transmission.AUTOMATIQUE, NbrePortes.Trois, true, 1, Permis.B);
+        VoitureResponseDto responseDto = new VoitureResponseDto(1, null, "Twingo","rose",5, Carburant.ESSENCE, TypeVoiture.CITADINE, Transmission.AUTOMATIQUE, NbrePortes.TROIS, true, 1, Permis.B);
 
 
         Mockito.when(daoMock.findById(1)).thenReturn(Optional.of(vraieVoiture));
@@ -400,10 +400,10 @@ public class VoitureServiceImplTest {
         assertEquals("Maserati", vraieVoiture.getMarque());
         assertEquals("Twingo", vraieVoiture.getModele());
         assertEquals("rose", vraieVoiture.getCouleur());
-        assertEquals(NbrePortes.Trois, vraieVoiture.getNbrePortes());
+        assertEquals(NbrePortes.TROIS, vraieVoiture.getNbrePortes());
         assertEquals(5, vraieVoiture.getNbreDePlaces());
-        assertEquals(Carburant.Essence, vraieVoiture.getCarburant());
-        assertEquals(TypeVoiture.Citadine, vraieVoiture.getTypeVoiture());
+        assertEquals(Carburant.ESSENCE, vraieVoiture.getCarburant());
+        assertEquals(TypeVoiture.CITADINE, vraieVoiture.getTypeVoiture());
         assertEquals(Transmission.AUTOMATIQUE, vraieVoiture.getTransmission());
         assertEquals(true, vraieVoiture.getClimatisation());
         assertEquals(1, vraieVoiture.getNbrBagages());
@@ -442,9 +442,9 @@ public class VoitureServiceImplTest {
         voiture.setModele("Grecale");
         voiture.setCouleur("rose");
         voiture.setNbreDePlaces(5);
-        voiture.setCarburant(Carburant.Hybride);
-        voiture.setTypeVoiture(TypeVoiture.Berline);
-        voiture.setNbrePortes(NbrePortes.Cinq);
+        voiture.setCarburant(Carburant.HYBRIDE);
+        voiture.setTypeVoiture(TypeVoiture.BERLINE);
+        voiture.setNbrePortes(NbrePortes.CINQ);
         voiture.setTransmission(Transmission.AUTOMATIQUE);
         voiture.setClimatisation(true);
         voiture.setNbrBagages(3);
@@ -459,9 +459,9 @@ public class VoitureServiceImplTest {
         voiture.setModele("Sprinter XXL");
         voiture.setCouleur("rose");
         voiture.setNbreDePlaces(15);
-        voiture.setCarburant(Carburant.Essence);
-        voiture.setTypeVoiture(TypeVoiture.Luxe);
-        voiture.setNbrePortes(NbrePortes.Cinq);
+        voiture.setCarburant(Carburant.ESSENCE);
+        voiture.setTypeVoiture(TypeVoiture.LUXE);
+        voiture.setNbrePortes(NbrePortes.CINQ);
         voiture.setTransmission(Transmission.AUTOMATIQUE);
         voiture.setClimatisation(true);
         voiture.setNbrBagages(10);
@@ -470,11 +470,11 @@ public class VoitureServiceImplTest {
     }
 
     private static VoitureResponseDto creerPremiereVoitureResponseDto(){
-        return new VoitureResponseDto(1, "Maserati","Grecale","rose",5, Carburant.Hybride, TypeVoiture.Berline,Transmission.AUTOMATIQUE,NbrePortes.Cinq,true,3,Permis.B);
+        return new VoitureResponseDto(1, "Maserati","Grecale","rose",5, Carburant.HYBRIDE, TypeVoiture.BERLINE,Transmission.AUTOMATIQUE,NbrePortes.CINQ,true,3,Permis.B);
     }
 
     private static VoitureResponseDto creerSecondeVoitureResponseDto() {
-        return new VoitureResponseDto(2, "Mercedes", "Sprinter XXL", "rose", 15, Carburant.Essence, TypeVoiture.Luxe, Transmission.AUTOMATIQUE, NbrePortes.Cinq, true, 10, Permis.D1);
+        return new VoitureResponseDto(2, "Mercedes", "Sprinter XXL", "rose", 15, Carburant.ESSENCE, TypeVoiture.LUXE, Transmission.AUTOMATIQUE, NbrePortes.CINQ, true, 10, Permis.D1);
     }
 
 
