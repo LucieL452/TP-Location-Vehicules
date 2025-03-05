@@ -36,5 +36,7 @@ public record VoitureRequestDto(
 
         @NotNull (message = "Le nombre de bagages est obligatoire")
         Integer nbrBagages
-) {
+
+
+){
 }

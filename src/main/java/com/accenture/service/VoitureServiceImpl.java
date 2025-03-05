@@ -209,26 +209,12 @@ public class VoitureServiceImpl implements VoitureService {
             voitureExistante.setNbrBagages(voiture.getNbrBagages());
         if (voiture.getPermis() != null)
             voitureExistante.setPermis(voiture.getPermis());
-        if (voiture.getTarifBase() != null)
-            voitureExistante.setTarifBase(voiture.getTarifBase());
-        if (voiture.getKilometrage() != null)
-            voitureExistante.setKilometrage(voiture.getKilometrage());
-        if (voiture.getHorsParc() != null)
-            voitureExistante.setHorsParc(voiture.getHorsParc());
-        if (voiture.getActif() != null)
-            voitureExistante.setActif(voiture.getActif());
 
     }
 
 
 
-    private void horsParc(Voiture voiture) throws VoitureException{
+//TODO LOCATION ?
 
-        if (!voiture.getActif()){
-            supprimer(voiture.getId());
-        } else throw new VoitureException("La voiture est en location");
-
-    }
-//TODO
 
 }

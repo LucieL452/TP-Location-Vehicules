@@ -20,11 +20,6 @@ public class Vehicule {
     private String modele;
     private String couleur;
 
-    private Integer kilometrage;
-    private Integer tarifBase;
-    private Boolean horsParc;
-    private Boolean actif;
-
 
 
 }
