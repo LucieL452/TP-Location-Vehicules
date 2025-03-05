@@ -273,9 +273,9 @@ public class ClientServiceImplTest {
 
 
     @DisplayName("""
-            Si la méthode modif est OK, on save les changements et un clientResponseDto est renvoyé""")
+            On modifie le prénom, on save les changements et un clientResponseDto avec le prénom modifié est renvoyé""")
     @Test
-    void TestModificationOK() {
+    void TestModificationPrenom() {
 
         ClientRequestDto requestDto = new ClientRequestDto(null, null, null, "Olivier", null, null, null);
         Client clientNouveau = new Client(null, null, null, "Olivier", null, null, null, null);
@@ -296,7 +296,51 @@ public class ClientServiceImplTest {
 
         Mockito.verify(daoMock, Mockito.times(1)).save(clientVrai);
 
+        assertEquals("Olivier", clientVrai.getPrenom());
+
     }
+
+
+    @DisplayName("""
+            On modifie tous les attributs sauf le prénom, on save les changements et un clientResponseDto avec les attributs modifiés est renvoyé""")
+    @Test
+    void TestModificationToutSaufPrenom() {
+
+        ClientRequestDto requestDto = new ClientRequestDto("max.verstappen@gmail.com", "rtze_FEZH89", "Hamilton", null, new AdresseDto("FastSpeed","SG1", "Stevenage"), LocalDate.of(1985, 1,7), List.of(Permis.B));
+        Client clientNouveau = new Client("max.verstappen@gmail.com", "rtze_FEZH89", "Hamilton", null, new Adresse("FastSpeed","SG1", "Stevenage"), LocalDate.of(1985, 1,7), LocalDate.now(), List.of(Permis.B));
+        Client clientVrai = creerPremierClient();
+
+        Client clientRemplace = creerPremierClient();
+        clientRemplace.setEmail("max.verstappen@gmail.com");
+        clientRemplace.setNom("Hamilton");
+        clientRemplace.setPassword("rtze_FEZH89");
+        clientRemplace.setAdresse(new Adresse("FastSpeed","SG1", "Stevenage"));
+        clientRemplace.setPermis(List.of(Permis.B));
+        clientRemplace.setDateNaissance(LocalDate.of(1985, 1,7));
+        clientRemplace.setDateInscription(LocalDate.now());
+
+        ClientResponseDto responseDto = new ClientResponseDto("max.verstappen@gmail.com", "Hamilton", null, new AdresseDto("FastSpeed","SG1", "Stevenage"), LocalDate.of(1985, 1,7), List.of(Permis.B));
+
+
+        Mockito.when(daoMock.findById("max.verstappen@gmail.com")).thenReturn(Optional.of(clientVrai));
+        Mockito.when(mapperMock.toClient(requestDto)).thenReturn(clientNouveau);
+        Mockito.when(daoMock.save(clientVrai)).thenReturn(clientRemplace);
+        Mockito.when(mapperMock.toClientResponseDto(clientRemplace)).thenReturn(responseDto);
+
+        assertEquals(responseDto, service.modifier("max.verstappen@gmail.com", "Cc89&lizdu", requestDto));
+
+        Mockito.verify(daoMock, Mockito.times(1)).save(clientVrai);
+        assertEquals("Hamilton", clientVrai.getNom());
+        assertEquals("rtze_FEZH89", clientVrai.getPassword());
+        assertEquals("max.verstappen@gmail.com", clientVrai.getEmail());
+        assertEquals("Max", clientVrai.getPrenom());
+        assertEquals(new Adresse("FastSpeed","SG1", "Stevenage"), clientVrai.getAdresse());
+        assertEquals(List.of(Permis.B), clientVrai.getPermis());
+        assertEquals(LocalDate.of(1985, 1,7), clientVrai.getDateNaissance());
+        assertEquals(LocalDate.now(), clientVrai.getDateInscription());
+
+    }
+
 
 //    ==================================================================================================================
 //                                            TESTS POUR LA METHODE SUPPRIMER

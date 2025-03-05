@@ -238,6 +238,8 @@ public class ClientServiceImpl implements ClientService {
             clientExistant.setDateNaissance(client.getDateNaissance());
         if (client.getAdresse() != null)
             clientExistant.setAdresse(client.getAdresse());
+        if (client.getPermis() != null)
+            clientExistant.setPermis(client.getPermis());
 
     }
 
