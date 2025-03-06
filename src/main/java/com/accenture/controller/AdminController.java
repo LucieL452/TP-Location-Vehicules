@@ -29,8 +29,13 @@ public class AdminController {
     }
 
     /**
-     * Méthode qui retourne une liste de tous les administrateurs en base
-     * @return
+     * Récupère la liste de tous les administrateurs enregistrés en base de données.
+     *
+     * <p>Cette méthode retourne une liste d'objets {@link AdminResponseDto} représentant
+     * les administrateurs disponibles. Si l'accès est autorisé, la liste est retournée avec
+     * un statut HTTP 200 (OK).</p>
+     *
+     * @return Une liste de {@link AdminResponseDto} contenant les informations des administrateurs.
      */
     @GetMapping
     @Operation(summary = "Voir les administrateurs", description = "Voir la liste de tous les administrateurs en base.")
@@ -40,10 +45,18 @@ public class AdminController {
         return adminService.listeAdmin();
     }
 
+
     /**
-     * Méthode qui permet d'ajouter un administrateur
-     * @param adminRequestDto
-     * @return
+     * Ajoute un administrateur dans la base de données.
+     *
+     * <p>Cette méthode reçoit un objet {@link AdminRequestDto} contenant les informations
+     * de l'administrateur à ajouter. Si les données sont valides, l'administrateur est
+     * enregistré et une réponse avec le statut HTTP 201 (Created) est retournée.
+     * En cas de données invalides, une réponse HTTP 400 (Bad Request) est envoyée.</p>
+     *
+     * @param adminRequestDto Objet contenant les informations de l'administrateur à ajouter.
+     * @return {@link ResponseEntity} avec le statut {@code 201 Created} si l'ajout est réussi.
+     *         En cas d'erreur de validation, retourne {@code 400 Bad Request}.
      */
     @PostMapping
     @Operation(summary = "Ajouter un administrateur", description = "Ajoute un administrateur en base.")
